@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -150,7 +151,6 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
 class WeeklyOverviewScreen extends StatelessWidget {
   const WeeklyOverviewScreen({super.key});
 
@@ -173,7 +173,7 @@ class WeeklyOverviewScreen extends StatelessWidget {
                       children: [
                         const CircleAvatar(
                           radius: 30,
-                          backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                          backgroundImage: NetworkImage('https://www.attivacostruzioni.it/wp-content/uploads/2020/10/logo-footer-bianco.png'),
                         ),
                         const SizedBox(width: 30),
                         Column(
@@ -290,7 +290,6 @@ class WeeklyOverviewScreen extends StatelessWidget {
     );
   }
 }
-
 class DayHeader extends StatelessWidget {
   final String label;
   final bool highlight;
@@ -308,7 +307,6 @@ class DayHeader extends StatelessWidget {
     );
   }
 }
-
 class DayCell extends StatelessWidget {
   final String content;
   final bool isRed;
@@ -326,7 +324,6 @@ class DayCell extends StatelessWidget {
     );
   }
 }
-
 class DropdownField extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -352,7 +349,6 @@ class DropdownField extends StatelessWidget {
     );
   }
 }
-
 class SiteDetailScreen extends StatelessWidget {
   const SiteDetailScreen({super.key});
 
@@ -402,9 +398,23 @@ class SiteDetailScreen extends StatelessWidget {
                 ),
               ),
               TextButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  final ImagePicker picker = ImagePicker();
+                  final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+                  if (image != null) {
+                    File photo = File(image.path);
+                    // Qui puoi gestire l'immagine scattata (es. salvarla, mostrarla, ecc.)
+                    print("Foto scattata: ${photo.path}");
+                  } else {
+                    print("Nessuna foto scattata.");
+                  }
+                },
                 icon: const Icon(Icons.photo_camera, color: Colors.green),
-                label: const Text("SCATTA FOTO", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                label: const Text(
+                  "SCATTA FOTO",
+                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),
@@ -437,8 +447,6 @@ class SiteDetailScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 10),
-
-            // Titolo
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
@@ -496,7 +504,6 @@ class SiteDetailScreen extends StatelessWidget {
     );
   }
 }
-
 class ArchiveButton extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -520,14 +527,12 @@ class ArchiveButton extends StatelessWidget {
     );
   }
 }
-
 class RapportinoScreen extends StatefulWidget {
   const RapportinoScreen({super.key});
 
   @override
   State<RapportinoScreen> createState() => _RapportinoScreenState();
 }
-
 class _RapportinoScreenState extends State<RapportinoScreen> {
   String? selectedAttiva;
   String? selectedManodopera;
@@ -620,7 +625,6 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
     );
   }
 }
-
 class RapportinoSection extends StatelessWidget {
   final String title;
   final Color color;
