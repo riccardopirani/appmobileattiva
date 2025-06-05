@@ -430,7 +430,8 @@ class SiteDetailScreen extends StatelessWidget {
                 children: [
                   const CircleAvatar(
                     radius: 28,
-                    backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                    backgroundImage: NetworkImage( 'https://www.attivacostruzioni.it/wp-content/uploads/2020/10/logo-footer-bianco.png',
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Column(
