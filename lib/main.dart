@@ -36,7 +36,6 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // LOGO
               Image.network(
                 'https://www.attivacostruzioni.it/wp-content/uploads/2020/10/logo-footer-bianco.png',
                 height: 100,
@@ -44,7 +43,6 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // E-mail
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
