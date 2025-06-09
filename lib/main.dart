@@ -150,7 +150,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 20),
 
-              // ACCEDI
               SizedBox(
                 width: double.infinity,
                 height: 50,
