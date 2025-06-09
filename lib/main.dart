@@ -5,9 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'Model/Cantiere.dart';
 import 'Model/Utente.dart';
 import 'Utils/support.dart';
 
+List<DateTime> getWeekDates() {
+  final now = DateTime.now();
+  final monday = now.subtract(Duration(days: now.weekday - 1));
+  return List.generate(7, (i) => monday.add(Duration(days: i)));
+}
+
+String formatDate(DateTime date) {
+  final giorni = ["lun.", "mar.", "mer.", "gio.", "ven.", "sab.", "dom."];
+  final mesi = [
+    "gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno",
+    "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"
+  ];
+  return "${giorni[date.weekday - 1]} ${date.day} ${mesi[date.month - 1]}";
+}
 void main() {
   runApp(const MyApp());
 }
@@ -203,21 +218,60 @@ class WeeklyOverviewScreen extends StatefulWidget {
 
 class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
   String nomeCompleto = '';
+  List<Cantiere> cantieriList = [];
+  List<Cantiere> filteredCantieri = [];
+  String? selectedCod;
+  String? selectedCliente;
+  String? selectedIndirizzo;
+  bool isButtonEnabled = false;
 
   @override
   void initState() {
     super.initState();
     caricaNome();
+    caricaCantieri();
   }
 
+  // Carica il nome completo dell'utente
   Future<void> caricaNome() async {
     final nome = await Storage.leggi("Nome");
     final cognome = await Storage.leggi("Cognome");
-    print(nome);
-    print(cognome);
 
     setState(() {
       nomeCompleto = '$nome $cognome';
+    });
+  }
+
+  // Carica la lista dei cantieri e filtra i risultati
+  Future<void> caricaCantieri() async {
+    final utente = Utente.init(0, "", "");  // Assuming Utente object is available
+    final cantieri = await Cantiere.ricerca(utente, 0, '', '', true, 0);
+
+    setState(() {
+      cantieriList = cantieri;
+      filteredCantieri = cantieri;
+    });
+  }
+
+  // Funzione di filtro per i dropdown
+  void filterCantieri() {
+    setState(() {
+      filteredCantieri = cantieriList.where((cantiere) {
+        final matchCod = selectedCod == null || cantiere.getNomeCantiere().toString() == selectedCod;
+        final matchCliente = selectedCliente == null || cantiere.getCliente()!.getRagioneSociale().toString() == selectedCliente;
+        final matchIndirizzo = selectedIndirizzo == null || cantiere.getIndirizzo() == selectedIndirizzo;
+        return matchCod && matchCliente && matchIndirizzo;
+      }).toList();
+
+
+
+      // Abilita il bottone solo se tutti i filtri sono settati
+      isButtonEnabled = selectedCod != null && selectedCliente != null && selectedIndirizzo != null;
+      if(isButtonEnabled==true){
+        Storage.salva("selectedCod",selectedCod!);
+        Storage.salva("selectedIndirizzo",selectedIndirizzo!);
+        Storage.salva("selectedCliente",selectedCliente!);
+      }
     });
   }
 
@@ -287,32 +341,25 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Table(
-                            border:
-                            TableBorder.all(color: Colors.grey.shade400),
+                            border: TableBorder.all(color: Colors.grey.shade400),
                             defaultColumnWidth: IntrinsicColumnWidth(),
                             children: [
                               TableRow(
-                                children: [
-                                  DayHeader("lun. 26 maggio"),
-                                  DayHeader("mar. 27 maggio"),
-                                  DayHeader("mer. 28 maggio"),
-                                  DayHeader("gio. 29 maggio"),
-                                  DayHeader("ven. 30 maggio"),
-                                  DayHeader("sab. 31 maggio", highlight: true),
-                                  DayHeader("dom. 1 giugno", highlight: true),
-                                ],
+                                children: getWeekDates()
+                                    .map((d) => DayHeader(
+                                  formatDate(d),
+                                  highlight: d.weekday >= 6, // sabato e domenica
+                                ))
+                                    .toList(),
                               ),
-                              const TableRow(
-                                children: [
-                                  DayCell("Cod. 361\nBunge"),
-                                  DayCell("Cod. 362\nPir"),
-                                  DayCell("Cod. 361\nBunge"),
-                                  DayCell("Cod. 362\nPir"),
-                                  DayCell("Cod. 362\nPir"),
-                                  DayCell("", isRed: true),
-                                  DayCell("", isRed: true),
-                                ],
-                              )
+                              TableRow(
+                                children: getWeekDates()
+                                    .map((d) => DayCell(
+                                  "Cod. 36${d.weekday}\nBunge",
+                                  isRed: d.weekday >= 6,
+                                ))
+                                    .toList(),
+                              ),
                             ],
                           ),
                         ),
@@ -335,14 +382,65 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  const DropdownField(icon: Icons.qr_code, label: "Cod."),
+                  // Dropdown per Cod
+                  DropdownButton<String>(
+                    value: selectedCod,
+                    hint: Text("Cod."),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCod = value;
+                        filterCantieri();
+                      });
+                    },
+                    items: cantieriList
+                        .map((cantiere) => DropdownMenuItem<String>(
+                      value: cantiere.getNomeCantiere().toString(),
+                      child: Text(cantiere.getNomeCantiere().toString()),
+                    ))
+                        .toList(),
+                  ),
                   const SizedBox(height: 10),
-                  const DropdownField(icon: Icons.person, label: "Cliente"),
+
+                  // Dropdown per Cliente
+                  DropdownButton<String>(
+                    value: selectedCliente,
+                    hint: Text("Cliente"),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCliente = value;
+                        filterCantieri();
+                      });
+                    },
+                    items: cantieriList
+                        .map((cantiere) => DropdownMenuItem<String>(
+                      value: cantiere.c.getRagioneSociale(),
+                      child: Text(cantiere.c.getRagioneSociale() ?? ''),
+                    ))
+                        .toList(),
+                  ),
                   const SizedBox(height: 10),
-                  const DropdownField(
-                      icon: Icons.location_searching, label: "Indirizzo"),
+
+                  // Dropdown per Indirizzo
+                  DropdownButton<String>(
+                    value: selectedIndirizzo,
+                    hint: Text("Indirizzo"),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedIndirizzo = value;
+                        filterCantieri();
+                      });
+                    },
+                    items: cantieriList
+                        .map((cantiere) => DropdownMenuItem<String>(
+                      value: cantiere.getIndirizzo(),
+                      child: Text(cantiere.getIndirizzo() ?? ''),
+                    ))
+                        .toList(),
+                  ),
+
                   const SizedBox(height: 16),
 
+                  // Bottone "ENTRA"
                   SizedBox(
                     width: MediaQuery.of(context).size.width < 400
                         ? double.infinity
@@ -354,13 +452,15 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6)),
                       ),
-                      onPressed: () {
+                      onPressed: isButtonEnabled
+                          ? () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => SiteDetailScreen()),
                         );
-                      },
+                      }
+                          : null,
                       child: const Text("ENTRA",
                           style: TextStyle(
                               color: Colors.white,
