@@ -12,7 +12,6 @@ import 'Model/Cantiere.dart';
 import 'Model/Utente.dart';
 import 'Utils/support.dart';
 
-
 List<DateTime> getWeekDates() {
   final now = DateTime.now();
   final monday = now.subtract(Duration(days: now.weekday - 1));
@@ -22,11 +21,22 @@ List<DateTime> getWeekDates() {
 String formatDate(DateTime date) {
   final giorni = ["lun.", "mar.", "mer.", "gio.", "ven.", "sab.", "dom."];
   final mesi = [
-    "gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno",
-    "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"
+    "gennaio",
+    "febbraio",
+    "marzo",
+    "aprile",
+    "maggio",
+    "giugno",
+    "luglio",
+    "agosto",
+    "settembre",
+    "ottobre",
+    "novembre",
+    "dicembre"
   ];
   return "${giorni[date.weekday - 1]} ${date.day} ${mesi[date.month - 1]}";
 }
+
 void main() {
   runApp(const MyApp());
 }
@@ -156,9 +166,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     String email = _emailController.text.trim();
                     String password = _passwordController.text;
 
-                    Utente u=new Utente.init(0,"","");
-                    bool valid=(await u.login(email, password));
-                    if (valid==true) {
+                    Utente u = new Utente.init(0, "", "");
+                    bool valid = (await u.login(email, password));
+                    if (valid == true) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -248,7 +258,8 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
 
   // Carica la lista dei cantieri e filtra i risultati
   Future<void> caricaCantieri() async {
-    final utente = Utente.init(0, "", "");  // Assuming Utente object is available
+    final utente =
+        Utente.init(0, "", ""); // Assuming Utente object is available
     final cantieri = await Cantiere.ricerca(utente, 0, '', '', true, 0);
 
     setState(() {
@@ -261,16 +272,22 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
   void filterCantieri() {
     setState(() {
       filteredCantieri = cantieriList.where((cantiere) {
-        final matchCod = selectedCod == null || cantiere.getNomeCantiere().toString() == selectedCod;
-        final matchCliente = selectedCliente == null || cantiere.getCliente()!.getRagioneSociale().toString() == selectedCliente;
-        final matchIndirizzo = selectedIndirizzo == null || cantiere.getIndirizzo() == selectedIndirizzo;
+        final matchCod = selectedCod == null ||
+            cantiere.getNomeCantiere().toString() == selectedCod;
+        final matchCliente = selectedCliente == null ||
+            cantiere.getCliente()!.getRagioneSociale().toString() ==
+                selectedCliente;
+        final matchIndirizzo = selectedIndirizzo == null ||
+            cantiere.getIndirizzo() == selectedIndirizzo;
         return matchCod && matchCliente && matchIndirizzo;
       }).toList();
-      isButtonEnabled = selectedCod != null && selectedCliente != null && selectedIndirizzo != null;
-      if(isButtonEnabled==true){
-        Storage.salva("selectedCod",selectedCod!);
-        Storage.salva("selectedIndirizzo",selectedIndirizzo!);
-        Storage.salva("selectedCliente",selectedCliente!);
+      isButtonEnabled = selectedCod != null &&
+          selectedCliente != null &&
+          selectedIndirizzo != null;
+      if (isButtonEnabled == true) {
+        Storage.salva("selectedCod", selectedCod!);
+        Storage.salva("selectedIndirizzo", selectedIndirizzo!);
+        Storage.salva("selectedCliente", selectedCliente!);
       }
     });
   }
@@ -301,9 +318,12 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Utente", style: TextStyle(color: Colors.grey)),
+                            const Text("Utente",
+                                style: TextStyle(color: Colors.grey)),
                             Text(
-                              nomeCompleto.isNotEmpty ? nomeCompleto : 'Caricamento...',
+                              nomeCompleto.isNotEmpty
+                                  ? nomeCompleto
+                                  : 'Caricamento...',
                               style: const TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold),
@@ -341,23 +361,25 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Table(
-                            border: TableBorder.all(color: Colors.grey.shade400),
+                            border:
+                                TableBorder.all(color: Colors.grey.shade400),
                             defaultColumnWidth: IntrinsicColumnWidth(),
                             children: [
                               TableRow(
                                 children: getWeekDates()
                                     .map((d) => DayHeader(
-                                  formatDate(d),
-                                  highlight: d.weekday >= 6, // sabato e domenica
-                                ))
+                                          formatDate(d),
+                                          highlight: d.weekday >=
+                                              6, // sabato e domenica
+                                        ))
                                     .toList(),
                               ),
                               TableRow(
                                 children: getWeekDates()
                                     .map((d) => DayCell(
-                                  "Cod. 36${d.weekday}\nBunge",
-                                  isRed: d.weekday >= 6,
-                                ))
+                                          "Cod. 36${d.weekday}\nBunge",
+                                          isRed: d.weekday >= 6,
+                                        ))
                                     .toList(),
                               ),
                             ],
@@ -394,9 +416,10 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                     },
                     items: cantieriList
                         .map((cantiere) => DropdownMenuItem<String>(
-                      value: cantiere.getNomeCantiere().toString(),
-                      child: Text(cantiere.getNomeCantiere().toString()),
-                    ))
+                              value: cantiere.getNomeCantiere().toString(),
+                              child:
+                                  Text(cantiere.getNomeCantiere().toString()),
+                            ))
                         .toList(),
                   ),
                   const SizedBox(height: 10),
@@ -413,9 +436,9 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                     },
                     items: cantieriList
                         .map((cantiere) => DropdownMenuItem<String>(
-                      value: cantiere.c.getRagioneSociale(),
-                      child: Text(cantiere.c.getRagioneSociale() ?? ''),
-                    ))
+                              value: cantiere.c.getRagioneSociale(),
+                              child: Text(cantiere.c.getRagioneSociale() ?? ''),
+                            ))
                         .toList(),
                   ),
                   const SizedBox(height: 10),
@@ -432,9 +455,9 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                     },
                     items: cantieriList
                         .map((cantiere) => DropdownMenuItem<String>(
-                      value: cantiere.getIndirizzo(),
-                      child: Text(cantiere.getIndirizzo() ?? ''),
-                    ))
+                              value: cantiere.getIndirizzo(),
+                              child: Text(cantiere.getIndirizzo() ?? ''),
+                            ))
                         .toList(),
                   ),
 
@@ -454,12 +477,12 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                       ),
                       onPressed: isButtonEnabled
                           ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SiteDetailScreen()),
-                        );
-                      }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SiteDetailScreen()),
+                              );
+                            }
                           : null,
                       child: const Text("ENTRA",
                           style: TextStyle(
@@ -549,8 +572,6 @@ class DropdownField extends StatelessWidget {
   }
 }
 
-
-
 class SiteDetailScreen extends StatefulWidget {
   const SiteDetailScreen({super.key});
 
@@ -559,7 +580,6 @@ class SiteDetailScreen extends StatefulWidget {
 }
 
 class _SiteDetailScreenState extends State<SiteDetailScreen> {
-
   String selectedCod = '';
   String selectedIndirizzo = '';
   String selectedCliente = '';
@@ -569,7 +589,8 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
   String addressString = '';
 
   double latitude = 37.42796133580664;
-  double longitude = -122.085749655962; // Example coordinates (you can update it dynamically)
+  double longitude =
+      -122.085749655962; // Example coordinates (you can update it dynamically)
   late final WebViewController _webViewController;
 
   @override
@@ -579,9 +600,9 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
     // Initialize WebView when the widget is first loaded
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse('https://www.google.com/maps?q=$latitude,$longitude'));
+      ..loadRequest(
+          Uri.parse('https://www.google.com/maps?q=$latitude,$longitude'));
     print('Latitudine: $latitude, Longitudine: $longitude');
-
   }
 
   Future<void> loadAddressData() async {
@@ -661,7 +682,8 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   ),
                 ],
                 child: TextButton.icon(
-                  onPressed: null, // Disabled because it's handled by PopupMenuButton
+                  onPressed:
+                      null, // Disabled because it's handled by PopupMenuButton
                   icon: const Icon(Icons.add_circle, color: Colors.green),
                   label: const Text(
                     "AGGIUNGI...",
@@ -675,7 +697,8 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                 icon: const Icon(Icons.photo_camera, color: Colors.green),
                 label: const Text(
                   "SCATTA FOTO",
-                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.green, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -699,12 +722,12 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Utente", style: TextStyle(color: Colors.grey)),
+                      const Text("Utente",
+                          style: TextStyle(color: Colors.grey)),
                       Text(
                         userFullName, // Displaying the full name of the user
                         style: const TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.green, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -753,6 +776,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
     );
   }
 }
+
 class ArchiveButton extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -871,14 +895,12 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
             child: const Text("Data del giorno preimpostata. Ma modificabile."),
           ),
           const SizedBox(height: 20),
-
           RapportinoSection(
             title: "Attiv.A",
             color: Colors.green,
 
             dropdownItems: buildDropdownNames(), // <-- dinamico
           ),
-
           RapportinoSection(
             title: "Manodopera",
             color: Colors.orange,
@@ -888,13 +910,11 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
           RapportinoSection(
             title: "Aziende",
             color: Colors.blue,
-
             dropdownItems: dropdownOptions,
           ),
           RapportinoSection(
             title: "Noleggio",
             color: Colors.purple,
-
             dropdownItems: dropdownOptions,
             showHoursField: false,
           ),

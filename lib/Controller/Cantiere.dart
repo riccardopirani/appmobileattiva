@@ -72,7 +72,6 @@ class CantiereController {
   }
 
   static List<Cantiere> decodeList(String valuejson) {
-
     try {
       final List<dynamic> jsonList =
           json.decode(valuejson); // Decode the JSON string
