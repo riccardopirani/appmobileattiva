@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -150,11 +151,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Accesso negato'),
-                            content: const Text('E-mail o password non validi.'),
+                            content:
+                                const Text('E-mail o password non validi.'),
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop(); // Chiude il dialog
+                                  Navigator.of(context)
+                                      .pop(); // Chiude il dialog
                                 },
                                 child: const Text('OK'),
                               ),
