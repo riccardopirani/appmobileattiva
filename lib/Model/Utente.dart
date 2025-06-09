@@ -40,8 +40,10 @@ class Utente {
     this.password = password;
     var user = UtenteController();
     idutente = await user.login(username, password);
+    print(idutente);
     List<Utente> luser = await UtenteController.caricaValori(idutente!);
     if (idutente! > 0) {
+
       Storage.salva("IdUtente", idutente.toString());
       Storage.salva("Username", username);
       Storage.salva("Password", password);

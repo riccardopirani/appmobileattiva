@@ -6,6 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'Model/Utente.dart';
+import 'Utils/support.dart';
 
 void main() {
   runApp(const MyApp());
@@ -136,9 +137,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     String email = _emailController.text.trim();
                     String password = _passwordController.text;
 
-                    UtenteController u = UtenteController();
-                    int valid=(await u.login(email, password));
-                    if (valid >= 1) {
+                    Utente u=new Utente.init(0,"","");
+                    bool valid=(await u.login(email, password));
+                    if (valid==true) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -193,8 +194,32 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class WeeklyOverviewScreen extends StatelessWidget {
+class WeeklyOverviewScreen extends StatefulWidget {
   const WeeklyOverviewScreen({super.key});
+
+  @override
+  State<WeeklyOverviewScreen> createState() => _WeeklyOverviewScreenState();
+}
+
+class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
+  String nomeCompleto = '';
+
+  @override
+  void initState() {
+    super.initState();
+    caricaNome();
+  }
+
+  Future<void> caricaNome() async {
+    final nome = await Storage.leggi("Nome");
+    final cognome = await Storage.leggi("Cognome");
+    print(nome);
+    print(cognome);
+
+    setState(() {
+      nomeCompleto = '$nome $cognome';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -221,13 +246,14 @@ class WeeklyOverviewScreen extends StatelessWidget {
                         const SizedBox(width: 30),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text("Utente",
-                                style: TextStyle(color: Colors.grey)),
-                            Text("Paolo Alberti Pezzoli",
-                                style: TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold)),
+                          children: [
+                            const Text("Utente", style: TextStyle(color: Colors.grey)),
+                            Text(
+                              nomeCompleto.isNotEmpty ? nomeCompleto : 'Caricamento...',
+                              style: const TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ],
                         ),
                         const Spacer(),
@@ -262,7 +288,7 @@ class WeeklyOverviewScreen extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           child: Table(
                             border:
-                                TableBorder.all(color: Colors.grey.shade400),
+                            TableBorder.all(color: Colors.grey.shade400),
                             defaultColumnWidth: IntrinsicColumnWidth(),
                             children: [
                               TableRow(
