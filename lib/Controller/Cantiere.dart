@@ -72,7 +72,6 @@ class CantiereController {
   }
 
   static List<Cantiere> decodeList(String valuejson) {
-    print('Received JSON: $valuejson');
 
     try {
       final List<dynamic> jsonList =
@@ -101,7 +100,6 @@ class CantiereController {
         );
       }).toList();
     } catch (e) {
-      print('Error decoding JSON: $e');
       return [];
     }
   }

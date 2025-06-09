@@ -137,7 +137,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     String password = _passwordController.text;
 
                     UtenteController u = UtenteController();
-                    if (await u.login(email, password) == true) {
+                    int valid=(await u.login(email, password));
+                    if (valid >= 1) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -145,7 +146,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       );
                     } else {
-                      // Mostra dialog di errore
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
