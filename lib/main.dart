@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 void main() {
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -121,7 +123,8 @@ class LoginScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WeeklyOverviewScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => WeeklyOverviewScreen()),
                     );
                   },
                   child: const Text(
@@ -149,6 +152,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
 class WeeklyOverviewScreen extends StatelessWidget {
   const WeeklyOverviewScreen({super.key});
 
@@ -171,14 +175,19 @@ class WeeklyOverviewScreen extends StatelessWidget {
                       children: [
                         const CircleAvatar(
                           radius: 30,
-                          backgroundImage: NetworkImage('https://www.attivacostruzioni.it/wp-content/uploads/2020/10/logo-footer-bianco.png'),
+                          backgroundImage: NetworkImage(
+                              'https://www.attivacostruzioni.it/wp-content/uploads/2020/10/logo-footer-bianco.png'),
                         ),
                         const SizedBox(width: 30),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
-                            Text("Utente", style: TextStyle(color: Colors.grey)),
-                            Text("Paolo Alberti Pezzoli", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                            Text("Utente",
+                                style: TextStyle(color: Colors.grey)),
+                            Text("Paolo Alberti Pezzoli",
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold)),
                           ],
                         ),
                         const Spacer(),
@@ -203,12 +212,17 @@ class WeeklyOverviewScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Column(
                       children: [
-                        const Text("LA MIA SETTIMANA", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
+                        const Text("LA MIA SETTIMANA",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green)),
                         const SizedBox(height: 10),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Table(
-                            border: TableBorder.all(color: Colors.grey.shade400),
+                            border:
+                                TableBorder.all(color: Colors.grey.shade400),
                             defaultColumnWidth: IntrinsicColumnWidth(),
                             children: [
                               TableRow(
@@ -247,7 +261,10 @@ class WeeklyOverviewScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "SCEGLI IL CANTIERE!",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -256,25 +273,32 @@ class WeeklyOverviewScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   const DropdownField(icon: Icons.person, label: "Cliente"),
                   const SizedBox(height: 10),
-                  const DropdownField(icon: Icons.location_searching, label: "Indirizzo"),
+                  const DropdownField(
+                      icon: Icons.location_searching, label: "Indirizzo"),
                   const SizedBox(height: 16),
 
                   SizedBox(
-                    width: MediaQuery.of(context).size.width < 400 ? double.infinity : 150,
+                    width: MediaQuery.of(context).size.width < 400
+                        ? double.infinity
+                        : 150,
                     height: 45,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
                       ),
                       onPressed: () {
-
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SiteDetailScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => SiteDetailScreen()),
                         );
                       },
-                      child: const Text("ENTRA", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      child: const Text("ENTRA",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
                     ),
                   ),
 
@@ -288,6 +312,7 @@ class WeeklyOverviewScreen extends StatelessWidget {
     );
   }
 }
+
 class DayHeader extends StatelessWidget {
   final String label;
   final bool highlight;
@@ -300,11 +325,15 @@ class DayHeader extends StatelessWidget {
       color: highlight ? Colors.red.shade100 : Colors.white,
       padding: const EdgeInsets.all(8),
       child: Center(
-        child: Text(label, style: TextStyle(fontWeight: FontWeight.bold, color: highlight ? Colors.red : Colors.black)),
+        child: Text(label,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: highlight ? Colors.red : Colors.black)),
       ),
     );
   }
 }
+
 class DayCell extends StatelessWidget {
   final String content;
   final bool isRed;
@@ -317,11 +346,14 @@ class DayCell extends StatelessWidget {
       height: 60,
       color: isRed ? Colors.red : Colors.white,
       child: Center(
-        child: Text(content, textAlign: TextAlign.center, style: TextStyle(color: isRed ? Colors.white : Colors.black)),
+        child: Text(content,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: isRed ? Colors.white : Colors.black)),
       ),
     );
   }
 }
+
 class DropdownField extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -337,8 +369,11 @@ class DropdownField extends StatelessWidget {
         labelStyle: const TextStyle(color: Colors.green),
         filled: true,
         fillColor: Colors.white,
-        border: const OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(8))),
-        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        border: const OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
       items: const [
         DropdownMenuItem(value: "1", child: Text("Seleziona")),
@@ -347,6 +382,7 @@ class DropdownField extends StatelessWidget {
     );
   }
 }
+
 class SiteDetailScreen extends StatelessWidget {
   const SiteDetailScreen({super.key});
 
@@ -367,12 +403,15 @@ class SiteDetailScreen extends StatelessWidget {
                   if (value == 'rapportino') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const RapportinoScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const RapportinoScreen()),
                     );
                   } else if (value == 'verbale') {
                     // eventualmente aggiungi logica per verbale
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Azione per Verbale non ancora implementata")),
+                      const SnackBar(
+                          content: Text(
+                              "Azione per Verbale non ancora implementata")),
                     );
                   }
                 },
@@ -387,18 +426,21 @@ class SiteDetailScreen extends StatelessWidget {
                   ),
                 ],
                 child: TextButton.icon(
-                  onPressed: null, // disattivato perché gestito da PopupMenuButton
+                  onPressed:
+                      null, // disattivato perché gestito da PopupMenuButton
                   icon: const Icon(Icons.add_circle, color: Colors.green),
                   label: const Text(
                     "AGGIUNGI...",
-                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
               TextButton.icon(
                 onPressed: () async {
                   final ImagePicker picker = ImagePicker();
-                  final XFile? image = await picker.pickImage(source: ImageSource.camera);
+                  final XFile? image =
+                      await picker.pickImage(source: ImageSource.camera);
 
                   if (image != null) {
                     File photo = File(image.path);
@@ -411,7 +453,8 @@ class SiteDetailScreen extends StatelessWidget {
                 icon: const Icon(Icons.photo_camera, color: Colors.green),
                 label: const Text(
                   "SCATTA FOTO",
-                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.green, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -428,7 +471,8 @@ class SiteDetailScreen extends StatelessWidget {
                 children: [
                   const CircleAvatar(
                     radius: 28,
-                    backgroundImage: NetworkImage( 'https://www.attivacostruzioni.it/wp-content/uploads/2020/10/logo-footer-bianco.png',
+                    backgroundImage: NetworkImage(
+                      'https://www.attivacostruzioni.it/wp-content/uploads/2020/10/logo-footer-bianco.png',
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -436,7 +480,10 @@ class SiteDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text("Utente", style: TextStyle(color: Colors.grey)),
-                      Text("Paolo Alberti Pezzoli", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                      Text("Paolo Alberti Pezzoli",
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const Spacer(),
@@ -451,7 +498,10 @@ class SiteDetailScreen extends StatelessWidget {
               child: Text(
                 "Cod. 365 Bunge S.p.a. Via Baiona 237 «Silo»",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: Colors.green, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold),
               ),
             ),
 
@@ -466,20 +516,17 @@ class SiteDetailScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child:FlutterMap(
-
-                  children: [
-                    TileLayer(
-                      urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: ['a', 'b', 'c'],
-                      userAgentPackageName: 'com.example.yourapp',
-                    ),
-
-                  ],
-                )
-
-              ),
+                  borderRadius: BorderRadius.circular(8),
+                  child: FlutterMap(
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        subdomains: ['a', 'b', 'c'],
+                        userAgentPackageName: 'com.example.yourapp',
+                      ),
+                    ],
+                  )),
             ),
 
             const SizedBox(height: 30),
@@ -489,11 +536,13 @@ class SiteDetailScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 children: const [
-                  ArchiveButton(icon: Icons.list_alt, label: "Archivio rapportini"),
+                  ArchiveButton(
+                      icon: Icons.list_alt, label: "Archivio rapportini"),
                   SizedBox(height: 16),
                   ArchiveButton(icon: Icons.photo, label: "Galleria foto"),
                   SizedBox(height: 16),
-                  ArchiveButton(icon: Icons.description, label: "Archivio verbali"),
+                  ArchiveButton(
+                      icon: Icons.description, label: "Archivio verbali"),
                 ],
               ),
             ),
@@ -503,6 +552,7 @@ class SiteDetailScreen extends StatelessWidget {
     );
   }
 }
+
 class ArchiveButton extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -520,25 +570,32 @@ class ArchiveButton extends StatelessWidget {
         const SizedBox(width: 16),
         Text(
           label,
-          style: const TextStyle(fontSize: 18, color: Colors.green, fontWeight: FontWeight.w500),
+          style: const TextStyle(
+              fontSize: 18, color: Colors.green, fontWeight: FontWeight.w500),
         ),
       ],
     );
   }
 }
+
 class RapportinoScreen extends StatefulWidget {
   const RapportinoScreen({super.key});
 
   @override
   State<RapportinoScreen> createState() => _RapportinoScreenState();
 }
+
 class _RapportinoScreenState extends State<RapportinoScreen> {
   String? selectedAttiva;
   String? selectedManodopera;
   String? selectedAzienda;
   String? selectedNoleggio;
 
-  final List<String> dropdownOptions = ['Operatore 1', 'Operatore 2', 'Operatore 3'];
+  final List<String> dropdownOptions = [
+    'Operatore 1',
+    'Operatore 2',
+    'Operatore 3'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -562,24 +619,33 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () {},
-            child: const Text('SALVA', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: const Text('SALVA',
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text("Rapportino del", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
+          const Text("Rapportino del",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green)),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
-              boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 3)],
+              boxShadow: [
+                BoxShadow(color: Colors.grey.shade300, blurRadius: 3)
+              ],
             ),
             child: const Text("Data del giorno preimpostata. Ma modificabile."),
           ),
@@ -624,6 +690,7 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
     );
   }
 }
+
 class RapportinoSection extends StatelessWidget {
   final String title;
   final Color color;
@@ -659,7 +726,8 @@ class RapportinoSection extends StatelessWidget {
           // Etichetta
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-            child: Text(operatorLabel.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(operatorLabel.toUpperCase(),
+                style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
 
           // Selettore operatore + ore
@@ -672,7 +740,9 @@ class RapportinoSection extends StatelessWidget {
                     decoration: const InputDecoration(labelText: 'Da elenco'),
                     value: selectedValue,
                     onChanged: onChanged,
-                    items: dropdownItems.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                    items: dropdownItems
+                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                        .toList(),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -693,9 +763,15 @@ class RapportinoSection extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
             child: Row(
               children: const [
-                SizedBox(width: 60, child: TextField(decoration: InputDecoration(labelText: "ORE"), keyboardType: TextInputType.number)),
+                SizedBox(
+                    width: 60,
+                    child: TextField(
+                        decoration: InputDecoration(labelText: "ORE"),
+                        keyboardType: TextInputType.number)),
                 SizedBox(width: 10),
-                Expanded(child: TextField(decoration: InputDecoration(labelText: "DESCRIZIONE"))),
+                Expanded(
+                    child: TextField(
+                        decoration: InputDecoration(labelText: "DESCRIZIONE"))),
                 SizedBox(width: 10),
                 Icon(Icons.add),
               ],
@@ -709,7 +785,11 @@ class RapportinoSection extends StatelessWidget {
               children: [
                 const Icon(Icons.photo_camera, color: Colors.black54),
                 const SizedBox(width: 8),
-                Text(title == "Attiv.A" ? "Fotografa DDT" : "Fotografa documento", style: const TextStyle(color: Colors.black54)),
+                Text(
+                    title == "Attiv.A"
+                        ? "Fotografa DDT"
+                        : "Fotografa documento",
+                    style: const TextStyle(color: Colors.black54)),
               ],
             ),
           ),
@@ -721,7 +801,8 @@ class RapportinoSection extends StatelessWidget {
               child: TextButton.icon(
                 onPressed: () {}, // Potresti aprire un altro dropdown qui
                 icon: const Icon(Icons.add_circle, color: Colors.black45),
-                label: Text("AGGIUNGI ${title.toUpperCase()}", style: const TextStyle(color: Colors.black45)),
+                label: Text("AGGIUNGI ${title.toUpperCase()}",
+                    style: const TextStyle(color: Colors.black45)),
               ),
             ),
           ),
