@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:appattiva/Controller/Utente.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'Model/Utente.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,10 +27,16 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +66,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -81,6 +91,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   filled: true,
@@ -120,12 +131,38 @@ class LoginScreen extends StatelessWidget {
                       side: const BorderSide(color: Colors.black),
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WeeklyOverviewScreen()),
-                    );
+                  onPressed: () async {
+                    String email = _emailController.text.trim();
+                    String password = _passwordController.text;
+
+                    UtenteController u = UtenteController();
+                    if (await u.login(email, password) == true) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WeeklyOverviewScreen(),
+                        ),
+                      );
+                    } else {
+                      // Mostra dialog di errore
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Accesso negato'),
+                            content: const Text('E-mail o password non validi.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Chiude il dialog
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
                   child: const Text(
                     'ACCEDI',
