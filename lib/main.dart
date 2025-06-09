@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:appattiva/Controller/Utente.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'Model/Cantiere.dart';
@@ -262,10 +263,6 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
         final matchIndirizzo = selectedIndirizzo == null || cantiere.getIndirizzo() == selectedIndirizzo;
         return matchCod && matchCliente && matchIndirizzo;
       }).toList();
-
-
-
-      // Abilita il bottone solo se tutti i filtri sono settati
       isButtonEnabled = selectedCod != null && selectedCliente != null && selectedIndirizzo != null;
       if(isButtonEnabled==true){
         Storage.salva("selectedCod",selectedCod!);
@@ -549,8 +546,63 @@ class DropdownField extends StatelessWidget {
   }
 }
 
-class SiteDetailScreen extends StatelessWidget {
+
+class SiteDetailScreen extends StatefulWidget {
   const SiteDetailScreen({super.key});
+
+  @override
+  _SiteDetailScreenState createState() => _SiteDetailScreenState();
+}
+
+class _SiteDetailScreenState extends State<SiteDetailScreen> {
+  String selectedCod = '';
+  String selectedIndirizzo = '';
+  String selectedCliente = '';
+  String nome = '';
+  String cognome = '';
+  String userFullName = '';
+  String addressString = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadAddressData();
+  }
+
+  // Fetching the stored values asynchronously
+  Future<void> loadAddressData() async {
+    // Fetching data from Storage
+    final cod = await Storage.leggi("selectedCod");
+    final indirizzo = await Storage.leggi("selectedIndirizzo");
+    final cliente = await Storage.leggi("selectedCliente");
+    final userNome = await Storage.leggi("Nome");
+    final userCognome = await Storage.leggi("Cognome");
+
+    // Setting the state with the fetched values
+    setState(() {
+      selectedCod = cod ?? '';
+      selectedIndirizzo = indirizzo ?? '';
+      selectedCliente = cliente ?? '';
+      nome = userNome ?? '';
+      cognome = userCognome ?? '';
+      userFullName = '$nome $cognome';
+      addressString = '$selectedCod$selectedCliente $selectedIndirizzo';
+    });
+  }
+
+  // Function to pick an image using the camera
+  Future<void> takePhoto() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image != null) {
+      File photo = File(image.path);
+      // Here you can store the photo in your app or save it
+      print("Foto scattata: ${photo.path}");
+    } else {
+      print("Nessuna foto scattata.");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -573,7 +625,7 @@ class SiteDetailScreen extends StatelessWidget {
                           builder: (context) => const RapportinoScreen()),
                     );
                   } else if (value == 'verbale') {
-                    // eventualmente aggiungi logica per verbale
+                    // Eventually add logic for verbale
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text(
@@ -592,8 +644,7 @@ class SiteDetailScreen extends StatelessWidget {
                   ),
                 ],
                 child: TextButton.icon(
-                  onPressed:
-                      null, // disattivato perché gestito da PopupMenuButton
+                  onPressed: null, // Disabled because it's handled by PopupMenuButton
                   icon: const Icon(Icons.add_circle, color: Colors.green),
                   label: const Text(
                     "AGGIUNGI...",
@@ -603,24 +654,11 @@ class SiteDetailScreen extends StatelessWidget {
                 ),
               ),
               TextButton.icon(
-                onPressed: () async {
-                  final ImagePicker picker = ImagePicker();
-                  final XFile? image =
-                      await picker.pickImage(source: ImageSource.camera);
-
-                  if (image != null) {
-                    File photo = File(image.path);
-                    // Qui puoi gestire l'immagine scattata (es. salvarla, mostrarla, ecc.)
-                    print("Foto scattata: ${photo.path}");
-                  } else {
-                    print("Nessuna foto scattata.");
-                  }
-                },
+                onPressed: takePhoto, // Opens the camera
                 icon: const Icon(Icons.photo_camera, color: Colors.green),
                 label: const Text(
                   "SCATTA FOTO",
-                  style: TextStyle(
-                      color: Colors.green, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -644,12 +682,14 @@ class SiteDetailScreen extends StatelessWidget {
                   const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text("Utente", style: TextStyle(color: Colors.grey)),
-                      Text("Paolo Alberti Pezzoli",
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold)),
+                    children: [
+                      const Text("Utente", style: TextStyle(color: Colors.grey)),
+                      Text(
+                        userFullName, // Displaying the full name of the user
+                        style: const TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                   const Spacer(),
@@ -659,12 +699,12 @@ class SiteDetailScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 10),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "Cod. 365 Bunge S.p.a. Via Baiona 237 «Silo»",
+                addressString, // Display the concatenated address string
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 18,
                     color: Colors.green,
                     fontWeight: FontWeight.bold),
@@ -673,7 +713,7 @@ class SiteDetailScreen extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Mappa
+            // Mappa (Placeholder here, you should integrate map logic)
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               height: 200,
@@ -682,17 +722,18 @@ class SiteDetailScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: FlutterMap(
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        subdomains: ['a', 'b', 'c'],
-                        userAgentPackageName: 'com.example.yourapp',
-                      ),
-                    ],
-                  )),
+                borderRadius: BorderRadius.circular(8),
+                child: FlutterMap(
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      subdomains: ['a', 'b', 'c'],
+                      userAgentPackageName: 'com.example.yourapp',
+                    ),
+                  ],
+                ),
+              ),
             ),
 
             const SizedBox(height: 30),
@@ -718,7 +759,6 @@ class SiteDetailScreen extends StatelessWidget {
     );
   }
 }
-
 class ArchiveButton extends StatelessWidget {
   final IconData icon;
   final String label;

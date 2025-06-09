@@ -41,6 +41,7 @@ dependencies:
   rflutter_alert: ^2.0.7
   path_provider: ^2.1.5
   flutter_cache_manager: ^3.4.1
+  geocoding: ^4.0.0
 
 dev_dependencies:
   flutter_test:
