@@ -1,14 +1,17 @@
 import 'dart:io';
 
 import 'package:appattiva/Controller/Utente.dart';
+import 'package:appattiva/Model/RisorseUmane.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:webview_flutter/webview_flutter.dart';
+import 'Controller/RisorseUmane.dart';
 import 'Model/Cantiere.dart';
 import 'Model/Utente.dart';
 import 'Utils/support.dart';
+
 
 List<DateTime> getWeekDates() {
   final now = DateTime.now();
@@ -547,6 +550,7 @@ class DropdownField extends StatelessWidget {
 }
 
 
+
 class SiteDetailScreen extends StatefulWidget {
   const SiteDetailScreen({super.key});
 
@@ -555,6 +559,7 @@ class SiteDetailScreen extends StatefulWidget {
 }
 
 class _SiteDetailScreenState extends State<SiteDetailScreen> {
+
   String selectedCod = '';
   String selectedIndirizzo = '';
   String selectedCliente = '';
@@ -563,22 +568,29 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
   String userFullName = '';
   String addressString = '';
 
+  double latitude = 37.42796133580664;
+  double longitude = -122.085749655962; // Example coordinates (you can update it dynamically)
+  late final WebViewController _webViewController;
+
   @override
   void initState() {
     super.initState();
     loadAddressData();
+    // Initialize WebView when the widget is first loaded
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse('https://www.google.com/maps?q=$latitude,$longitude'));
+    print('Latitudine: $latitude, Longitudine: $longitude');
+
   }
 
-  // Fetching the stored values asynchronously
   Future<void> loadAddressData() async {
-    // Fetching data from Storage
     final cod = await Storage.leggi("selectedCod");
     final indirizzo = await Storage.leggi("selectedIndirizzo");
     final cliente = await Storage.leggi("selectedCliente");
     final userNome = await Storage.leggi("Nome");
     final userCognome = await Storage.leggi("Cognome");
-
-    // Setting the state with the fetched values
+    print('Latitudine: $latitude, Longitudine: $longitude');
     setState(() {
       selectedCod = cod ?? '';
       selectedIndirizzo = indirizzo ?? '';
@@ -586,7 +598,12 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
       nome = userNome ?? '';
       cognome = userCognome ?? '';
       userFullName = '$nome $cognome';
-      addressString = '$selectedCod$selectedCliente $selectedIndirizzo';
+      addressString = '$selectedCod $selectedCliente $selectedIndirizzo';
+    });
+
+    setState(() {
+      latitude = 37.42796133580664;
+      longitude = -122.085749655962;
     });
   }
 
@@ -597,7 +614,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
 
     if (image != null) {
       File photo = File(image.path);
-      // Here you can store the photo in your app or save it
+      // Handle the captured photo here (e.g., store or display)
       print("Foto scattata: ${photo.path}");
     } else {
       print("Nessuna foto scattata.");
@@ -668,7 +685,6 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Header Utente
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -697,7 +713,6 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -710,35 +725,14 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-
             const SizedBox(height: 16),
-
-            // Mappa (Placeholder here, you should integrate map logic)
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              height: 200,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: FlutterMap(
-                  children: [
-                    TileLayer(
-                      urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: ['a', 'b', 'c'],
-                      userAgentPackageName: 'com.example.yourapp',
-                    ),
-                  ],
-                ),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                child: WebViewWidget(controller: _webViewController),
               ),
             ),
-
             const SizedBox(height: 30),
-
-            // Pulsanti Archivio
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -797,11 +791,32 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
   String? selectedAzienda;
   String? selectedNoleggio;
 
+  List<RisorseUmane> risorse = [];
+
+  @override
+  void initState() {
+    super.initState();
+    caricaRisorse();
+  }
+
+  Future<void> caricaRisorse() async {
+    List<RisorseUmane> lista = await RisorseUmaneController.carica();
+    setState(() {
+      risorse = lista;
+    });
+  }
+
   final List<String> dropdownOptions = [
     'Operatore 1',
     'Operatore 2',
     'Operatore 3'
   ];
+
+  List<String> buildDropdownNames() {
+    return risorse.map((risorsa) {
+      return "${risorsa.getNome()} ${risorsa.getCognome()}";
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -857,37 +872,29 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
           ),
           const SizedBox(height: 20),
 
-          // Sezioni
           RapportinoSection(
             title: "Attiv.A",
             color: Colors.green,
-            operatorLabel: "OPERATORE 1",
-            selectedValue: selectedAttiva,
-            onChanged: (val) => setState(() => selectedAttiva = val),
-            dropdownItems: dropdownOptions,
+
+            dropdownItems: buildDropdownNames(), // <-- dinamico
           ),
+
           RapportinoSection(
             title: "Manodopera",
             color: Colors.orange,
-            operatorLabel: "OPERATORE 1",
-            selectedValue: selectedManodopera,
-            onChanged: (val) => setState(() => selectedManodopera = val),
-            dropdownItems: dropdownOptions,
+
+            dropdownItems: buildDropdownNames(), // <-- dinamico
           ),
           RapportinoSection(
             title: "Aziende",
             color: Colors.blue,
-            operatorLabel: "AZIENDA 1",
-            selectedValue: selectedAzienda,
-            onChanged: (val) => setState(() => selectedAzienda = val),
+
             dropdownItems: dropdownOptions,
           ),
           RapportinoSection(
             title: "Noleggio",
             color: Colors.purple,
-            operatorLabel: "NOLEGGIATORE 1",
-            selectedValue: selectedNoleggio,
-            onChanged: (val) => setState(() => selectedNoleggio = val),
+
             dropdownItems: dropdownOptions,
             showHoursField: false,
           ),
@@ -897,43 +904,54 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
   }
 }
 
-class RapportinoSection extends StatelessWidget {
+class RapportinoSection extends StatefulWidget {
   final String title;
   final Color color;
-  final String operatorLabel;
-  final bool showHoursField;
   final List<String> dropdownItems;
-  final String? selectedValue;
-  final void Function(String?) onChanged;
+  final String? initialValue;
+  final bool showHoursField;
 
   const RapportinoSection({
     super.key,
     required this.title,
     required this.color,
-    required this.operatorLabel,
     required this.dropdownItems,
-    required this.selectedValue,
-    required this.onChanged,
+    this.initialValue,
     this.showHoursField = true,
   });
+
+  @override
+  State<RapportinoSection> createState() => _RapportinoSectionState();
+}
+
+class _RapportinoSectionState extends State<RapportinoSection> {
+  String? selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedValue = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: widget.color.withOpacity(0.15),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color),
+        border: Border.all(color: widget.color),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Etichetta
+          // Etichetta operatore selezionato
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-            child: Text(operatorLabel.toUpperCase(),
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(
+              (selectedValue ?? "Operatore").toUpperCase(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
 
           // Selettore operatore + ore
@@ -945,14 +963,18 @@ class RapportinoSection extends StatelessWidget {
                   child: DropdownButtonFormField<String>(
                     decoration: const InputDecoration(labelText: 'Da elenco'),
                     value: selectedValue,
-                    onChanged: onChanged,
-                    items: dropdownItems
+                    onChanged: (value) {
+                      setState(() {
+                        selectedValue = value;
+                      });
+                    },
+                    items: widget.dropdownItems
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),
                   ),
                 ),
                 const SizedBox(width: 10),
-                if (showHoursField)
+                if (widget.showHoursField)
                   const SizedBox(
                     width: 120,
                     child: TextField(
@@ -992,7 +1014,7 @@ class RapportinoSection extends StatelessWidget {
                 const Icon(Icons.photo_camera, color: Colors.black54),
                 const SizedBox(width: 8),
                 Text(
-                    title == "Attiv.A"
+                    widget.title == "Attiv.A"
                         ? "Fotografa DDT"
                         : "Fotografa documento",
                     style: const TextStyle(color: Colors.black54)),
@@ -1005,9 +1027,9 @@ class RapportinoSection extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: Center(
               child: TextButton.icon(
-                onPressed: () {}, // Potresti aprire un altro dropdown qui
+                onPressed: () {}, // Aggiungi funzionalità se serve
                 icon: const Icon(Icons.add_circle, color: Colors.black45),
-                label: Text("AGGIUNGI ${title.toUpperCase()}",
+                label: Text("AGGIUNGI ${widget.title.toUpperCase()}",
                     style: const TextStyle(color: Colors.black45)),
               ),
             ),
