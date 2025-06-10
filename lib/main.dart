@@ -718,7 +718,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const VerbaleScreen()),
+                          builder: (context) => VerbaleScreen()),
                     );
                   }
 
@@ -853,115 +853,102 @@ class VerbaleScreen extends StatefulWidget {
 }
 
 class _VerbaleScreenState extends State<VerbaleScreen> {
-  final TextEditingController descrizioneController = TextEditingController();
-  final TextEditingController firmatarioController = TextEditingController();
-  String nomeCompleto = '';
+  List<Widget> punti = [buildPunto(1)];
 
-  @override
-  void initState() {
-    super.initState();
-    caricaNome();
-  }
-
-  Future<void> caricaNome() async {
-    final nome = await Storage.leggi("Nome");
-    final cognome = await Storage.leggi("Cognome");
-    setState(() {
-      nomeCompleto = '$nome $cognome';
-      firmatarioController.text = nomeCompleto;
-    });
-  }
-
-  @override
-  void dispose() {
-    descrizioneController.dispose();
-    firmatarioController.dispose();
-    super.dispose();
-  }
-
-  void salvaVerbale() {
-    final descrizione = descrizioneController.text.trim();
-    final firmatario = firmatarioController.text.trim();
-
-    if (descrizione.isNotEmpty && firmatario.isNotEmpty) {
-      // Qui puoi implementare la logica di salvataggio verbale (es. invio a DB)
-      print("Verbale salvato:\n$descrizione\nFirmato da: $firmatario");
-
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Successo"),
-          content: const Text("Il verbale è stato salvato con successo."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("OK"),
-            ),
-          ],
+  static Widget buildPunto(int index) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Punto $index:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 16)),
+        SizedBox(height: 8),
+        TextField(
+          maxLines: 4,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            fillColor: Colors.grey.shade100,
+            filled: true,
+          ),
         ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Compila tutti i campi")),
-      );
-    }
+        SizedBox(height: 16),
+      ],
+    );
+  }
+
+  void aggiungiPunto() {
+    setState(() {
+      punti.add(buildPunto(punti.length + 1));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Nuovo Verbale"),
-        backgroundColor: Colors.green,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      appBar: AppBar(title: Text('VERBALE DI CANTIERE')),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text("Compila il verbale",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green)),
-            const SizedBox(height: 20),
-            TextField(
-              controller: descrizioneController,
-              maxLines: 6,
-              decoration: const InputDecoration(
-                labelText: "Descrizione",
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white,
+            Image.asset("assets/uiweb.jpg"),
+            Row(children: [Expanded(child: TextField(decoration: InputDecoration(labelText: 'VERBALE N°'))), SizedBox(width: 16), Expanded(child: TextField(decoration: InputDecoration(labelText: 'Data')))]),
+            TextField(decoration: InputDecoration(labelText: 'Codice')),
+            TextField(decoration: InputDecoration(labelText: 'Indirizzo cantiere')),
+            TextField(decoration: InputDecoration(labelText: 'Tipo appalto')),
+            Divider(),
+
+            // Commitente e DL
+            Row(
+              children: [
+                Expanded(child: Column(children: [TextField(decoration: InputDecoration(labelText: 'Committente Nome')), TextField(decoration: InputDecoration(labelText: 'Committente Mail'))])),
+                SizedBox(width: 16),
+                Expanded(child: Column(children: [TextField(decoration: InputDecoration(labelText: 'D.L. Nome')), TextField(decoration: InputDecoration(labelText: 'D.L. Mail'))])),
+              ],
+            ),
+
+            // Progettista e CSE
+            Row(
+              children: [
+                Expanded(child: Column(children: [TextField(decoration: InputDecoration(labelText: 'Progettista Nome')), TextField(decoration: InputDecoration(labelText: 'Progettista Mail'))])),
+                SizedBox(width: 16),
+                Expanded(child: Column(children: [TextField(decoration: InputDecoration(labelText: 'C.S.E. Nome')), TextField(decoration: InputDecoration(labelText: 'C.S.E. Mail'))])),
+              ],
+            ),
+
+            SizedBox(height: 16),
+            TextField(decoration: InputDecoration(labelText: 'Presenti in cantiere')),
+
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.add),
+                label: Text('AGGIUNGI PRESENTE'),
               ),
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: firmatarioController,
-              readOnly: true,
-              decoration: const InputDecoration(
-                labelText: "Firmato da",
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white,
+            SizedBox(height: 16),
+
+            ...punti,
+
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: aggiungiPunto,
+                icon: Icon(Icons.add, color: Colors.green),
+                label: Text('AGGIUNGI PUNTO', style: TextStyle(color: Colors.green)),
               ),
             ),
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  minimumSize: const Size(double.infinity, 50)),
-              onPressed: salvaVerbale,
-              icon: const Icon(Icons.save),
-              label: const Text("SALVA VERBALE",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-            )
+
+            SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Text('FIRMA'),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
 class ArchiveButton extends StatelessWidget {
   final IconData icon;
   final String label;
