@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui'
     as ui; // Necessario per ui.Image, ui.Canvas, ui.PictureRecorder
 
+import 'package:appattiva/Controller/Attivita.dart';
 import 'package:appattiva/Model/RisorseUmane.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,7 +12,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:signature/signature.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:appattiva/Controller/Attivita.dart';
+
 import 'Controller/RisorseUmane.dart';
 import 'Model/Cantiere.dart';
 import 'Model/Tipologia.dart';

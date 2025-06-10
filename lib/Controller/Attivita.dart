@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:appattiva/Controller/Api.dart';
-import 'package:appattiva/utils/support.dart';
 
 class AttivitaController {
   static Future<List<dynamic>> caricaAttivita() async {
