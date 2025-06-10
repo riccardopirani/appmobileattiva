@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui'
-    as ui; // Necessario per ui.Image, ui.Canvas, ui.PictureRecorder
+import 'dart:ui' as ui;
 
 import 'package:appattiva/Controller/Attivita.dart';
 import 'package:appattiva/Model/RisorseUmane.dart';
