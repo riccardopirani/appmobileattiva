@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'Controller/RisorseUmane.dart';
 import 'Model/Cantiere.dart';
+import 'Model/Tipologia.dart';
 import 'Model/Utente.dart';
 import 'Utils/support.dart';
 
@@ -232,6 +233,7 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
   List<Cantiere> filteredCantieri = [];
   String? selectedCod;
   String? selectedCliente;
+  String ?idCantiere;
   String? selectedIndirizzo;
   bool isButtonEnabled = false;
 
@@ -262,6 +264,7 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
 
 
   void filterCantieri() {
+    int idCantiereSelected=0;
     setState(() {
       filteredCantieri = cantieriList.where((cantiere) {
         final matchCod = selectedCod == null ||
@@ -271,12 +274,15 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                 selectedCliente;
         final matchIndirizzo = selectedIndirizzo == null ||
             cantiere.getIndirizzo() == selectedIndirizzo;
+        idCantiereSelected = cantiere.getIdCantiere()!;
         return matchCod && matchCliente && matchIndirizzo;
       }).toList();
       isButtonEnabled = selectedCod != null &&
           selectedCliente != null &&
           selectedIndirizzo != null;
       if (isButtonEnabled == true) {
+
+        Storage.salva("IdCantiereSelected", idCantiereSelected.toString());
         Storage.salva("selectedCod", selectedCod!);
         Storage.salva("selectedIndirizzo", selectedIndirizzo!);
         Storage.salva("selectedCliente", selectedCliente!);
@@ -382,8 +388,6 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                   ),
 
                   const SizedBox(height: 20),
-
-                  // Sezione scelta cantiere
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -514,6 +518,59 @@ class DayHeader extends StatelessWidget {
     );
   }
 }
+
+class ArchivioRapportiniScreen extends StatefulWidget {
+  final int idCantiere;
+
+  const ArchivioRapportiniScreen({super.key, required this.idCantiere});
+
+  @override
+  State<ArchivioRapportiniScreen> createState() => _ArchivioRapportiniScreenState();
+}
+
+class _ArchivioRapportiniScreenState extends State<ArchivioRapportiniScreen> {
+  List<RisorseUmane> risorseInserite = [];
+
+  @override
+  void initState() {
+    super.initState();
+    caricaRisorseCantiere();
+  }
+
+  Future<void> caricaRisorseCantiere() async {
+    final List<RisorseUmane> risultati =
+    await RisorseUmane.caricarisorseumanecantiere(widget.idCantiere);
+   print(risultati);
+    setState(() {
+      risorseInserite = risultati;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Archivio Rapportini"),
+        backgroundColor: Colors.green,
+      ),
+      body: risorseInserite.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        itemCount: risorseInserite.length,
+        itemBuilder: (context, index) {
+          final r = risorseInserite[index];
+          return ListTile(
+            leading: const Icon(Icons.person, color: Colors.green),
+            title: Text("${r.getNome()} ${r.getCognome()}"),
+            subtitle: Text("ID Risorsa: ${r.getNome()}"),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+          );
+        },
+      ),
+    );
+  }
+}
+
 
 class DayCell extends StatelessWidget {
   final String content;
@@ -751,9 +808,25 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
-                children: const [
-                  ArchiveButton(
-                      icon: Icons.list_alt, label: "Archivio rapportini"),
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      final idCantiere = await Storage.leggi("IdCantiereSelected");
+                      if (idCantiere != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ArchivioRapportiniScreen(idCantiere: int.parse(idCantiere)),
+                          ),
+                        );
+                      }
+                    },
+                    child: ArchiveButton(
+                      icon: Icons.list_alt,
+                      label: "Archivio rapportini",
+                    ),
+                  ),
                   SizedBox(height: 16),
                   ArchiveButton(icon: Icons.photo, label: "Galleria foto"),
                   SizedBox(height: 16),
@@ -828,6 +901,7 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
     'Operatore 3'
   ];
 
+
   List<String> buildDropdownNames() {
     return risorse.map((risorsa) {
       return "${risorsa.getNome()} ${risorsa.getCognome()}";
@@ -890,22 +964,24 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
           RapportinoSection(
             title: "Attiv.A",
             color: Colors.green,
-
+            risorse: risorse,
             dropdownItems: buildDropdownNames(), // <-- dinamico
           ),
           RapportinoSection(
             title: "Manodopera",
             color: Colors.orange,
-
+risorse: risorse,
             dropdownItems: buildDropdownNames(), // <-- dinamico
           ),
           RapportinoSection(
             title: "Aziende",
             color: Colors.blue,
+            risorse: risorse,
             dropdownItems: dropdownOptions,
           ),
           RapportinoSection(
             title: "Noleggio",
+            risorse: risorse,
             color: Colors.purple,
             dropdownItems: dropdownOptions,
             showHoursField: false,
@@ -922,12 +998,14 @@ class RapportinoSection extends StatefulWidget {
   final List<String> dropdownItems;
   final String? initialValue;
   final bool showHoursField;
+  final List<RisorseUmane> risorse;
 
   const RapportinoSection({
     super.key,
     required this.title,
     required this.color,
     required this.dropdownItems,
+    required this.risorse, // <-- aggiunto
     this.initialValue,
     this.showHoursField = true,
   });
@@ -936,9 +1014,50 @@ class RapportinoSection extends StatefulWidget {
   State<RapportinoSection> createState() => _RapportinoSectionState();
 }
 
+String formatToHHMM(String input) {
+  // Rimuove caratteri non numerici
+  String digits = input.replaceAll(RegExp(r'\D'), '');
+
+  // Limita a 4 cifre
+  if (digits.length > 4) {
+    digits = digits.substring(0, 4);
+  }
+
+  // Aggiunge zeri a sinistra se necessario
+  digits = digits.padLeft(4, '0');
+
+  // Separa ore e minuti
+  String hh = digits.substring(0, 2);
+  String mm = digits.substring(2, 4);
+
+  return '$hh:$mm';
+}
+String dataCorrenteSqlFormat(String ore) {
+  final now = DateTime.now();
+
+  String twoDigits(int n) => n.toString().padLeft(2, '0');
+
+  String year = now.year.toString();
+  String month = twoDigits(now.month);
+  String day = twoDigits(now.day);
+  String hour = ore;
+  String minute = "00";
+  String second = twoDigits(now.second);
+
+  return "$year-$month-$day $hour:$minute:$second";
+}
+
 class _RapportinoSectionState extends State<RapportinoSection> {
   String? selectedValue;
+  final TextEditingController oreController = TextEditingController();
+  final TextEditingController descrizioneController = TextEditingController();
 
+  @override
+  void dispose() {
+    oreController.dispose();
+    descrizioneController.dispose();
+    super.dispose();
+  }
   @override
   void initState() {
     super.initState();
@@ -986,14 +1105,7 @@ class _RapportinoSectionState extends State<RapportinoSection> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                if (widget.showHoursField)
-                  const SizedBox(
-                    width: 120,
-                    child: TextField(
-                      decoration: InputDecoration(labelText: 'Ore lavorate'),
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
+
               ],
             ),
           ),
@@ -1002,16 +1114,20 @@ class _RapportinoSectionState extends State<RapportinoSection> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
             child: Row(
-              children: const [
+              children: [
                 SizedBox(
                     width: 60,
                     child: TextField(
-                        decoration: InputDecoration(labelText: "ORE"),
-                        keyboardType: TextInputType.number)),
+                    controller: oreController,
+                    decoration: InputDecoration(labelText: "ORE"),
+                    keyboardType: TextInputType.number
+                )),
                 SizedBox(width: 10),
                 Expanded(
                     child: TextField(
-                        decoration: InputDecoration(labelText: "DESCRIZIONE"))),
+                        controller: descrizioneController,
+                        decoration: InputDecoration(labelText: "DESCRIZIONE")
+                    )),
                 SizedBox(width: 10),
                 Icon(Icons.add),
               ],
@@ -1039,7 +1155,50 @@ class _RapportinoSectionState extends State<RapportinoSection> {
             padding: const EdgeInsets.all(12.0),
             child: Center(
               child: TextButton.icon(
-                onPressed: () {}, // Aggiungi funzionalità se serve
+                onPressed: () async{
+                  List<Tipologia> tp = await Tipologia.caricaTipoligie();
+
+
+                  Tipologia? tipSelezionata = tp.firstWhere(
+                        (t) => t.getNomeTipologia() == widget.title,
+
+                  );
+
+                  RisorseUmane? user = widget.risorse.firstWhere(
+                        (t) => t.getNome()+" "+t.getCognome() == selectedValue,
+
+                  );
+                  print("idUtente: "+user.getIdUtente().toString());
+
+                  if (tipSelezionata != null && user.getIdUtente()!=null) {
+                    int idTipologia=tipSelezionata.getIdTipologia();
+                    String utente = selectedValue ?? "Nessun utente selezionato";
+                    String ore = formatToHHMM(oreController.text.trim());
+                    String descrizione = descrizioneController.text.trim();
+                    print("IdTipologia: "+idTipologia.toString()+"ore: "+ore+" descizione: "+descrizione+" utente: "+utente);
+                    print('Tipologia selezionata: ID = ${tipSelezionata.getIdTipologia()}, Nome = ${tipSelezionata.getNomeTipologia()}');
+                    int idCantiere=int.parse(await Storage.leggi("IdCantiereSelected"));
+
+                    RisorseUmane.inserimentoCantiere(idCantiere,idTipologia.toString(),user.getIdUtente().toString(),idCantiere.toString(),dataCorrenteSqlFormat(ore),dataCorrenteSqlFormat(ore),dataCorrenteSqlFormat(ore),descrizione,0);
+
+                  } else {
+                    print('⚠️ Nessuna tipologia trovata per "${widget.title}"');
+                  }
+
+                  print(widget.title);
+                  if(widget.title=='Attiv.A'){
+                    print("sono in attiva");
+                  }
+                  else if(widget.title=='Manodopera'){
+                    print("sono in mano");
+                  }
+                  else if(widget.title=='Aziende'){
+                    print("sono in aziende");
+                  }
+                  else{
+                    print("sono in noleggio");
+                  }
+                }, // Aggiungi funzionalità se serve
                 icon: const Icon(Icons.add_circle, color: Colors.black45),
                 label: Text("AGGIUNGI ${widget.title.toUpperCase()}",
                     style: const TextStyle(color: Colors.black45)),

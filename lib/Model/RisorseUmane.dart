@@ -65,7 +65,7 @@ class RisorseUmane {
   }
 
   static Future<bool> inserimentoCantiere(
-      Cantiere c,
+      int idCantiere,
       String idtipologia,
       String idRisorsaUmana,
       String data,
@@ -74,7 +74,7 @@ class RisorseUmane {
       String pausa,
       String descrizione,
       int extra) async {
-    return await RisorseUmaneController.inserimentoCantiere(c, idtipologia,
+    return await RisorseUmaneController.inserimentoCantiere(idCantiere, idtipologia,
         idRisorsaUmana, data, oreInizio, oreFine, pausa, descrizione, extra);
   }
 
@@ -96,7 +96,7 @@ class RisorseUmane {
   }
 
   static Future<List<RisorseUmane>> caricarisorseumanecantiere(
-      Cantiere c) async {
+      int c) async {
     return await RisorseUmaneController.caricarisorseumanecantiere(c);
   }
 

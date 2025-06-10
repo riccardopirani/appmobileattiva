@@ -12,7 +12,7 @@ import 'Api.dart';
 
 class RisorseUmaneController {
   static Future<bool> inserimentoCantiere(
-      Cantiere c,
+      int IdCantiere,
       String idtipologia,
       String idRisorsaUmana,
       String data,
@@ -24,7 +24,7 @@ class RisorseUmaneController {
     Map<String, dynamic> map = {
       'IdTipologia': idtipologia,
       'Descrizione': descrizione,
-      'IdCantiere': c.getIdCantiere(),
+      'IdCantiere': IdCantiere,
       'IdUtente': idRisorsaUmana,
       'Data': data,
       'IdUtenteInserimento': await Storage.leggi("IdUtente"),
@@ -107,8 +107,8 @@ class RisorseUmaneController {
   }
 
   static Future<List<RisorseUmane>> caricarisorseumanecantiere(
-      Cantiere c) async {
-    Map<String, dynamic> map = {'IdCantiere': c.getIdCantiere().toString()};
+      int c) async {
+    Map<String, dynamic> map = {'IdCantiere': c.toString()};
     String value = await apiRequest(
         "/RisorseUmane/CaricaRisorseCantiere", map, UrlRequest.POST);
     return (json.decode(value) as Iterable<dynamic>)
