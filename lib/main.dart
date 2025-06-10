@@ -211,8 +211,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  // Input border con ombra
   OutlineInputBorder _inputBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
@@ -243,8 +241,6 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
     caricaNome();
     caricaCantieri();
   }
-
-  // Carica il nome completo dell'utente
   Future<void> caricaNome() async {
     final nome = await Storage.leggi("Nome");
     final cognome = await Storage.leggi("Cognome");
@@ -254,10 +250,8 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
     });
   }
 
-  // Carica la lista dei cantieri e filtra i risultati
   Future<void> caricaCantieri() async {
-    final utente =
-        Utente.init(0, "", ""); // Assuming Utente object is available
+    final utente = Utente.init(0, "", "");
     final cantieri = await Cantiere.ricerca(utente, 0, '', '', true, 0);
 
     setState(() {
@@ -266,7 +260,7 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
     });
   }
 
-  // Funzione di filtro per i dropdown
+
   void filterCantieri() {
     setState(() {
       filteredCantieri = cantieriList.where((cantiere) {
