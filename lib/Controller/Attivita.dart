@@ -11,13 +11,13 @@ class AttivitaController {
   }
 
   static Future<bool> inserisciAttivita(
-      int idCantiere,
-      int idUtente,
-      String dataInizio,
-      String dataFine,
-      String descrizione,
-      int idUtenteSend,
-      ) async {
+    int idCantiere,
+    int idUtente,
+    String dataInizio,
+    String dataFine,
+    String descrizione,
+    int idUtenteSend,
+  ) async {
     final map = {
       'IdCantiere': idCantiere,
       'IdUtente': idUtente,
@@ -30,7 +30,8 @@ class AttivitaController {
     return parseSingleJson(value);
   }
 
-  static Future<bool> assegnaUtenteAttivita(int idUtente, int idAttivita) async {
+  static Future<bool> assegnaUtenteAttivita(
+      int idUtente, int idAttivita) async {
     final map = {
       'IdUtente': idUtente,
       'IdAttivita': idAttivita,

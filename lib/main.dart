@@ -149,7 +149,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     final Uri emailLaunchUri = Uri(
                       scheme: 'mailto',
                       path: 'info@attivacostruzioni.com',
-                      query: Uri.encodeFull('subject=Recupero password&body=Salve, ho dimenticato la password del mio account.'),
+                      query: Uri.encodeFull(
+                          'subject=Recupero password&body=Salve, ho dimenticato la password del mio account.'),
                     );
 
                     if (await canLaunchUrl(emailLaunchUri)) {
@@ -262,7 +263,6 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
     caricaDati();
   }
 
-
   Future<void> caricaDati() async {
     await Future.wait([
       caricaNome(),
@@ -293,8 +293,7 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
     for (var attivita in attivitaUtente) {
       int? idCantiereAttivita = attivita["IdCantiere"];
       var cantiereAssociato = cantieri.firstWhere(
-            (c) => c.getIdCantiere() == idCantiereAttivita,
-
+        (c) => c.getIdCantiere() == idCantiereAttivita,
       );
 
       if (cantiereAssociato != null) {
@@ -380,12 +379,12 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                         ),
                         const Spacer(),
                         IconButton(
-                          icon: const Icon(Icons.home, color: Colors.green, size: 32),
+                          icon: const Icon(Icons.home,
+                              color: Colors.green, size: 32),
                           onPressed: () {
                             Navigator.pop(context);
                           },
                         ),
-
                       ],
                     ),
                   ),
@@ -430,20 +429,27 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                               ),
                               TableRow(
                                 children: getWeekDates().map((d) {
-                                  final attivitaDelGiorno = attivitaSettimana.where((a) {
-                                    final data = DateTime.tryParse(a['DataInizio'] ?? '');
+                                  final attivitaDelGiorno =
+                                      attivitaSettimana.where((a) {
+                                    final data = DateTime.tryParse(
+                                        a['DataInizio'] ?? '');
                                     return data != null &&
                                         data.year == d.year &&
                                         data.month == d.month &&
                                         data.day == d.day;
                                   }).toList();
 
-                                  final descrizione = attivitaDelGiorno.isNotEmpty
-                                      ? (attivitaDelGiorno.first['Descrizione'] ?? 'Attività')
-                                      : '';
+                                  final descrizione =
+                                      attivitaDelGiorno.isNotEmpty
+                                          ? (attivitaDelGiorno
+                                                  .first['Descrizione'] ??
+                                              'Attività')
+                                          : '';
 
                                   return DayCell(
-                                    descrizione.isNotEmpty ? "Cod. "+descrizione : 'Nessuna attività',
+                                    descrizione.isNotEmpty
+                                        ? "Cod. " + descrizione
+                                        : 'Nessuna attività',
                                     isRed: d.weekday >= 6,
                                   );
                                 }).toList(),
@@ -717,7 +723,6 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
   void initState() {
     super.initState();
     loadAddressData();
-
   }
 
   Future<void> loadAddressData() async {
@@ -749,7 +754,6 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
 
     setState(() {}); // Triggera il rebuild con il controller pronto
   }
-
 
   // Function to pick an image using the camera
   Future<void> takePhoto() async {
@@ -859,7 +863,6 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                       Navigator.pop(context);
                     },
                   ),
-
                 ],
               ),
             ),
@@ -881,7 +884,6 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   ? WebViewWidget(controller: _webViewController)
                   : const Center(child: CircularProgressIndicator()),
             ),
-
             const SizedBox(height: 30),
             Expanded(
               child: ListView(
