@@ -560,7 +560,7 @@ class _ArchivioRapportiniScreenState extends State<ArchivioRapportiniScreen> {
           return ListTile(
             leading: const Icon(Icons.person, color: Colors.green),
             title: Text("${r.getNome()} ${r.getCognome()}"),
-            subtitle: Text("ID Risorsa: ${"${r.getNome()} ${r.getCognome()}"}\nData: ${r.getData()}\nDescrizione: ${r.getDescrizione()}\nOre: ${r.getTotaleOre()}"),
+            subtitle: Text("Risorsa: ${"${r.getNome()} ${r.getCognome()}"}\nData: ${r.getData()}\nDescrizione: ${r.getDescrizione()}\nOre: ${r.getTotaleOre()}"),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
           );
         },
