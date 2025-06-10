@@ -715,13 +715,13 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                           builder: (context) => const RapportinoScreen()),
                     );
                   } else if (value == 'verbale') {
-                    // Eventually add logic for verbale
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text(
-                              "Azione per Verbale non ancora implementata")),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VerbaleScreen()),
                     );
                   }
+
                 },
                 itemBuilder: (context) => [
                   const PopupMenuItem(
@@ -838,6 +838,123 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class VerbaleScreen extends StatefulWidget {
+  const VerbaleScreen({super.key});
+
+  @override
+  State<VerbaleScreen> createState() => _VerbaleScreenState();
+}
+
+class _VerbaleScreenState extends State<VerbaleScreen> {
+  final TextEditingController descrizioneController = TextEditingController();
+  final TextEditingController firmatarioController = TextEditingController();
+  String nomeCompleto = '';
+
+  @override
+  void initState() {
+    super.initState();
+    caricaNome();
+  }
+
+  Future<void> caricaNome() async {
+    final nome = await Storage.leggi("Nome");
+    final cognome = await Storage.leggi("Cognome");
+    setState(() {
+      nomeCompleto = '$nome $cognome';
+      firmatarioController.text = nomeCompleto;
+    });
+  }
+
+  @override
+  void dispose() {
+    descrizioneController.dispose();
+    firmatarioController.dispose();
+    super.dispose();
+  }
+
+  void salvaVerbale() {
+    final descrizione = descrizioneController.text.trim();
+    final firmatario = firmatarioController.text.trim();
+
+    if (descrizione.isNotEmpty && firmatario.isNotEmpty) {
+      // Qui puoi implementare la logica di salvataggio verbale (es. invio a DB)
+      print("Verbale salvato:\n$descrizione\nFirmato da: $firmatario");
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Successo"),
+          content: const Text("Il verbale è stato salvato con successo."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Compila tutti i campi")),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Nuovo Verbale"),
+        backgroundColor: Colors.green,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            const Text("Compila il verbale",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green)),
+            const SizedBox(height: 20),
+            TextField(
+              controller: descrizioneController,
+              maxLines: 6,
+              decoration: const InputDecoration(
+                labelText: "Descrizione",
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: firmatarioController,
+              readOnly: true,
+              decoration: const InputDecoration(
+                labelText: "Firmato da",
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  minimumSize: const Size(double.infinity, 50)),
+              onPressed: salvaVerbale,
+              icon: const Icon(Icons.save),
+              label: const Text("SALVA VERBALE",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            )
           ],
         ),
       ),
