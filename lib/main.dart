@@ -559,8 +559,13 @@ class _ArchivioRapportiniScreenState extends State<ArchivioRapportiniScreen> {
           final r = risorseInserite[index];
           return ListTile(
             leading: const Icon(Icons.person, color: Colors.green),
-            title: Text("${r.getNome()} ${r.getCognome()}"),
-            subtitle: Text("Risorsa: ${"${r.getNome()} ${r.getCognome()}"}\nData: ${r.getData()}\nDescrizione: ${r.getDescrizione()}\nOre: ${r.getTotaleOre()}"),
+            title: Text("Data: ${r.getData()}"),
+            subtitle: Text(
+                "Risorsa: ${r.getNome()} ${r.getCognome()}"
+                    "\nData: ${r.getData()}"
+                    "\nDescrizione: ${r.getDescrizione()}"
+                    "\nOre: ${r.getTotaleOre().substring(14, 16)}"
+            ),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
           );
         },
@@ -917,7 +922,9 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.close, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         ],
       ),
@@ -939,14 +946,14 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(5),
         children: [
           const Text("Rapportino del",
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.green)),
-          const SizedBox(height: 10),
+          const SizedBox(height: 2),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
