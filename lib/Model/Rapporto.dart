@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
 import 'package:appattiva/Controller/Rapporto.dart';
 import 'package:appattiva/Model/Cantiere.dart';
 import 'package:appattiva/Model/Utente.dart' show Utente;
 import 'package:appattiva/utils/support.dart';
+import 'package:flutter/material.dart';
 
 class Rapporto {
   Rapporto.empty();

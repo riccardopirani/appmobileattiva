@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:intl/intl.dart';
-import 'package:appattiva/Model/Cantiere.dart' show Cantiere;
 import 'package:appattiva/Model/Rapporto.dart';
 import 'package:appattiva/Model/RisorseUmane.dart';
 import 'package:appattiva/Model/Tipologia.dart';
 import 'package:appattiva/utils/support.dart';
+import 'package:intl/intl.dart';
 
 import 'Api.dart';
 

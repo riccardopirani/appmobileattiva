@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:appattiva/Controller/RisorseUmane.dart';
-import 'package:appattiva/Model/Cantiere.dart';
 import 'package:appattiva/Model/Rapporto.dart';
 
 class RisorseUmane {

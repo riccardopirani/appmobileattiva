@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 
-import 'package:intl/intl.dart';
 import 'package:appattiva/Model/Marcatura.dart';
 import 'package:appattiva/Model/Utente.dart';
+import 'package:intl/intl.dart';
 
 import 'Api.dart';
 
