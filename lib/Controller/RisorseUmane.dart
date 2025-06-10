@@ -112,14 +112,14 @@ class RisorseUmaneController {
         "/RisorseUmane/CaricaRisorseCantiere", map, UrlRequest.POST);
     return (json.decode(value) as Iterable<dynamic>)
         .map((dynamic jsonObject) => RisorseUmane.perCantieri(
-              jsonObject["IdUtente"] as int,
-              jsonObject["Risorsa"] as String,
-              jsonObject["TotaleOre"] as String,
-              jsonObject["Descrizione"] as String,
-              jsonObject["Data"] as String,
-              jsonObject["IdRisorseUmane"] as int,
-              jsonObject["Nome"] as String,
-              jsonObject["Cognome"] as String,
+              jsonObject["IdUtente"] ?? 0 as int,
+              jsonObject["Risorsa"] ?? "" as String,
+              jsonObject["TotaleOre"]?? "" as String,
+              jsonObject["Descrizione"]?? "" as String,
+              jsonObject["Data"]??"" as String,
+              jsonObject["IdRisorseUmane"]??0 as int,
+              jsonObject["Nome"]??"" as String,
+              jsonObject["Cognome"]??"" as String,
             ))
         .toList();
   }
