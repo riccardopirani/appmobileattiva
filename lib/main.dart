@@ -1226,14 +1226,13 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
             title: "Aziende",
             color: Colors.blue,
             risorse: risorse,
-            dropdownItems: dropdownOptions,
+            dropdownItems: buildDropdownNames(), // <-- dinamico
           ),
           RapportinoSection(
             title: "Noleggio",
-            risorse: risorse,
             color: Colors.purple,
-            dropdownItems: dropdownOptions,
-            showHoursField: false,
+            risorse: risorse,
+            dropdownItems: buildDropdownNames(), // <-- dinamico
           ),
         ],
       ),
