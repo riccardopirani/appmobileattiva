@@ -105,8 +105,7 @@ class RisorseUmaneController {
     }
   }
 
-  static Future<List<RisorseUmane>> caricarisorseumanecantiere(
-      int c) async {
+  static Future<List<RisorseUmane>> caricarisorseumanecantiere(int c) async {
     Map<String, dynamic> map = {'IdCantiere': c.toString()};
     String value = await apiRequest(
         "/RisorseUmane/CaricaRisorseCantiere", map, UrlRequest.POST);
@@ -114,12 +113,12 @@ class RisorseUmaneController {
         .map((dynamic jsonObject) => RisorseUmane.perCantieri(
               jsonObject["IdUtente"] ?? 0 as int,
               jsonObject["Risorsa"] ?? "" as String,
-              jsonObject["TotaleOre"]?? "" as String,
-              jsonObject["Descrizione"]?? "" as String,
-              jsonObject["Data"]??"" as String,
-              jsonObject["IdRisorseUmane"]??0 as int,
-              jsonObject["Nome"]??"" as String,
-              jsonObject["Cognome"]??"" as String,
+              jsonObject["TotaleOre"] ?? "" as String,
+              jsonObject["Descrizione"] ?? "" as String,
+              jsonObject["Data"] ?? "" as String,
+              jsonObject["IdRisorseUmane"] ?? 0 as int,
+              jsonObject["Nome"] ?? "" as String,
+              jsonObject["Cognome"] ?? "" as String,
             ))
         .toList();
   }

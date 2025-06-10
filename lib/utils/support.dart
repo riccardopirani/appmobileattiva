@@ -99,7 +99,7 @@ class Verifica {
 
 class Log {
   static Future<void> error(String err) async {
-   print(err);
+    print(err);
   }
 }
 

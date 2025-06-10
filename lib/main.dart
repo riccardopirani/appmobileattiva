@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui' as ui; // Necessario per ui.Image, ui.Canvas, ui.PictureRecorder
+import 'dart:ui'
+    as ui; // Necessario per ui.Image, ui.Canvas, ui.PictureRecorder
 
 import 'package:appattiva/Model/RisorseUmane.dart';
 import 'package:flutter/material.dart';
@@ -215,6 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
   OutlineInputBorder _inputBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
@@ -236,7 +238,7 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
   List<Cantiere> filteredCantieri = [];
   String? selectedCod;
   String? selectedCliente;
-  String ?idCantiere;
+  String? idCantiere;
   String? selectedIndirizzo;
   bool isButtonEnabled = false;
 
@@ -246,6 +248,7 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
     caricaNome();
     caricaCantieri();
   }
+
   Future<void> caricaNome() async {
     final nome = await Storage.leggi("Nome");
     final cognome = await Storage.leggi("Cognome");
@@ -265,9 +268,8 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
     });
   }
 
-
   void filterCantieri() {
-    int idCantiereSelected=0;
+    int idCantiereSelected = 0;
     setState(() {
       filteredCantieri = cantieriList.where((cantiere) {
         final matchCod = selectedCod == null ||
@@ -284,7 +286,6 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
           selectedCliente != null &&
           selectedIndirizzo != null;
       if (isButtonEnabled == true) {
-
         Storage.salva("IdCantiereSelected", idCantiereSelected.toString());
         Storage.salva("selectedCod", selectedCod!);
         Storage.salva("selectedIndirizzo", selectedIndirizzo!);
@@ -528,7 +529,8 @@ class ArchivioRapportiniScreen extends StatefulWidget {
   const ArchivioRapportiniScreen({super.key, required this.idCantiere});
 
   @override
-  State<ArchivioRapportiniScreen> createState() => _ArchivioRapportiniScreenState();
+  State<ArchivioRapportiniScreen> createState() =>
+      _ArchivioRapportiniScreenState();
 }
 
 class _ArchivioRapportiniScreenState extends State<ArchivioRapportiniScreen> {
@@ -542,8 +544,8 @@ class _ArchivioRapportiniScreenState extends State<ArchivioRapportiniScreen> {
 
   Future<void> caricaRisorseCantiere() async {
     final List<RisorseUmane> risultati =
-    await RisorseUmane.caricarisorseumanecantiere(widget.idCantiere);
-   print(risultati);
+        await RisorseUmane.caricarisorseumanecantiere(widget.idCantiere);
+    print(risultati);
     setState(() {
       risorseInserite = risultati;
     });
@@ -559,26 +561,23 @@ class _ArchivioRapportiniScreenState extends State<ArchivioRapportiniScreen> {
       body: risorseInserite.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
-        itemCount: risorseInserite.length,
-        itemBuilder: (context, index) {
-          final r = risorseInserite[index];
-          return ListTile(
-            leading: const Icon(Icons.person, color: Colors.green),
-            title: Text("Data: ${r.getData()}"),
-            subtitle: Text(
-                "Risorsa: ${r.getNome()} ${r.getCognome()}"
-                    "\nData: ${r.getData()}"
-                    "\nDescrizione: ${r.getDescrizione()}"
-                    "\nOre: ${r.getTotaleOre().substring(14, 16)}"
+              itemCount: risorseInserite.length,
+              itemBuilder: (context, index) {
+                final r = risorseInserite[index];
+                return ListTile(
+                  leading: const Icon(Icons.person, color: Colors.green),
+                  title: Text("Data: ${r.getData()}"),
+                  subtitle: Text("Risorsa: ${r.getNome()} ${r.getCognome()}"
+                      "\nData: ${r.getData()}"
+                      "\nDescrizione: ${r.getDescrizione()}"
+                      "\nOre: ${r.getTotaleOre().substring(14, 16)}"),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                );
+              },
             ),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-          );
-        },
-      ),
     );
   }
 }
-
 
 class DayCell extends StatelessWidget {
   final String content;
@@ -722,11 +721,9 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   } else if (value == 'verbale') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => VerbaleScreen()),
+                      MaterialPageRoute(builder: (context) => VerbaleScreen()),
                     );
                   }
-
                 },
                 itemBuilder: (context) => [
                   const PopupMenuItem(
@@ -819,13 +816,14 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      final idCantiere = await Storage.leggi("IdCantiereSelected");
+                      final idCantiere =
+                          await Storage.leggi("IdCantiereSelected");
                       if (idCantiere != null) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ArchivioRapportiniScreen(idCantiere: int.parse(idCantiere)),
+                            builder: (context) => ArchivioRapportiniScreen(
+                                idCantiere: int.parse(idCantiere)),
                           ),
                         );
                       }
@@ -864,7 +862,11 @@ class _VerbaleScreenState extends State<VerbaleScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Punto $index:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 16)),
+        Text('Punto $index:',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+                fontSize: 16)),
         SizedBox(height: 8),
         TextField(
           maxLines: 4,
@@ -889,7 +891,6 @@ class _VerbaleScreenState extends State<VerbaleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('VERBALE DI CANTIERE')),
-
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -900,52 +901,73 @@ class _VerbaleScreenState extends State<VerbaleScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   Image.asset("assets/uiweb.jpg"),
-
                   Row(children: [
-                    Expanded(child: TextField(decoration: InputDecoration(labelText: 'VERBALE N°'))),
+                    Expanded(
+                        child: TextField(
+                            decoration:
+                                InputDecoration(labelText: 'VERBALE N°'))),
                     SizedBox(width: 16),
-                    Expanded(child: TextField(decoration: InputDecoration(labelText: 'Data')))
+                    Expanded(
+                        child: TextField(
+                            decoration: InputDecoration(labelText: 'Data')))
                   ]),
-
                   TextField(decoration: InputDecoration(labelText: 'Codice')),
-                  TextField(decoration: InputDecoration(labelText: 'Indirizzo cantiere')),
-                  TextField(decoration: InputDecoration(labelText: 'Tipo appalto')),
-
+                  TextField(
+                      decoration:
+                          InputDecoration(labelText: 'Indirizzo cantiere')),
+                  TextField(
+                      decoration: InputDecoration(labelText: 'Tipo appalto')),
                   Divider(),
-
                   Row(
                     children: [
-                      Expanded(child: Column(children: [
-                        TextField(decoration: InputDecoration(labelText: 'Committente Nome')),
-                        TextField(decoration: InputDecoration(labelText: 'Committente Mail'))
+                      Expanded(
+                          child: Column(children: [
+                        TextField(
+                            decoration:
+                                InputDecoration(labelText: 'Committente Nome')),
+                        TextField(
+                            decoration:
+                                InputDecoration(labelText: 'Committente Mail'))
                       ])),
                       SizedBox(width: 16),
-                      Expanded(child: Column(children: [
-                        TextField(decoration: InputDecoration(labelText: 'D.L. Nome')),
-                        TextField(decoration: InputDecoration(labelText: 'D.L. Mail'))
+                      Expanded(
+                          child: Column(children: [
+                        TextField(
+                            decoration:
+                                InputDecoration(labelText: 'D.L. Nome')),
+                        TextField(
+                            decoration: InputDecoration(labelText: 'D.L. Mail'))
                       ])),
                     ],
                   ),
-
                   Row(
                     children: [
-                      Expanded(child: Column(children: [
-                        TextField(decoration: InputDecoration(labelText: 'Progettista Nome')),
-                        TextField(decoration: InputDecoration(labelText: 'Progettista Mail'))
+                      Expanded(
+                          child: Column(children: [
+                        TextField(
+                            decoration:
+                                InputDecoration(labelText: 'Progettista Nome')),
+                        TextField(
+                            decoration:
+                                InputDecoration(labelText: 'Progettista Mail'))
                       ])),
                       SizedBox(width: 16),
-                      Expanded(child: Column(children: [
-                        TextField(decoration: InputDecoration(labelText: 'C.S.E. Nome')),
-                        TextField(decoration: InputDecoration(labelText: 'C.S.E. Mail'))
+                      Expanded(
+                          child: Column(children: [
+                        TextField(
+                            decoration:
+                                InputDecoration(labelText: 'C.S.E. Nome')),
+                        TextField(
+                            decoration:
+                                InputDecoration(labelText: 'C.S.E. Mail'))
                       ])),
                     ],
                   ),
-
                   SizedBox(height: 16),
-                  TextField(decoration: InputDecoration(labelText: 'Presenti in cantiere')),
-
+                  TextField(
+                      decoration:
+                          InputDecoration(labelText: 'Presenti in cantiere')),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
@@ -954,19 +976,17 @@ class _VerbaleScreenState extends State<VerbaleScreen> {
                       label: Text('AGGIUNGI PRESENTE'),
                     ),
                   ),
-
                   SizedBox(height: 16),
                   ...punti,
-
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
                       onPressed: aggiungiPunto,
                       icon: Icon(Icons.add, color: Colors.green),
-                      label: Text('AGGIUNGI PUNTO', style: TextStyle(color: Colors.green)),
+                      label: Text('AGGIUNGI PUNTO',
+                          style: TextStyle(color: Colors.green)),
                     ),
                   ),
-
                   SizedBox(height: 32),
                 ],
               ),
@@ -980,7 +1000,8 @@ class _VerbaleScreenState extends State<VerbaleScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SignatureScreen(backgroundImage: image),
+                      builder: (context) =>
+                          SignatureScreen(backgroundImage: image),
                     ),
                   );
                 }
@@ -993,8 +1014,8 @@ class _VerbaleScreenState extends State<VerbaleScreen> {
       ),
     );
   }
-
 }
+
 class ArchiveButton extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -1030,7 +1051,8 @@ class SignatureScreen extends StatefulWidget {
 }
 
 class _SignatureScreenState extends State<SignatureScreen> {
-  final SignatureController _controller = SignatureController(penStrokeWidth: 3, penColor: Colors.black);
+  final SignatureController _controller =
+      SignatureController(penStrokeWidth: 3, penColor: Colors.black);
 
   @override
   Widget build(BuildContext context) {
@@ -1054,12 +1076,14 @@ class _SignatureScreenState extends State<SignatureScreen> {
         onPressed: () async {
           final ui.Image? signatureImage = await _controller.toImage();
           if (signatureImage != null) {
-            final Uint8List merged = await mergeImages(widget.backgroundImage, signatureImage);
+            final Uint8List merged =
+                await mergeImages(widget.backgroundImage, signatureImage);
             final directory = await getApplicationDocumentsDirectory();
             final path = '${directory.path}/firma_salvata.png';
             final file = File(path);
             await file.writeAsBytes(merged);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Firma salvata in: $path')));
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Firma salvata in: $path')));
             Navigator.pop(context);
           }
         },
@@ -1068,7 +1092,8 @@ class _SignatureScreenState extends State<SignatureScreen> {
     );
   }
 
-  Future<Uint8List> mergeImages(Uint8List bgBytes, ui.Image signatureImage) async {
+  Future<Uint8List> mergeImages(
+      Uint8List bgBytes, ui.Image signatureImage) async {
     final ui.Image bgImage = await decodeImageFromList(bgBytes);
 
     final recorder = ui.PictureRecorder();
@@ -1082,8 +1107,10 @@ class _SignatureScreenState extends State<SignatureScreen> {
 
     // Converti a immagine
     final picture = recorder.endRecording();
-    final ui.Image finalImage = await picture.toImage(bgImage.width, bgImage.height);
-    final ByteData? byteData = await finalImage.toByteData(format: ui.ImageByteFormat.png);
+    final ui.Image finalImage =
+        await picture.toImage(bgImage.width, bgImage.height);
+    final ByteData? byteData =
+        await finalImage.toByteData(format: ui.ImageByteFormat.png);
     return byteData!.buffer.asUint8List();
   }
 }
@@ -1121,7 +1148,6 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
     'Operatore 2',
     'Operatore 3'
   ];
-
 
   List<String> buildDropdownNames() {
     return risorse.map((risorsa) {
@@ -1193,7 +1219,7 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
           RapportinoSection(
             title: "Manodopera",
             color: Colors.orange,
-risorse: risorse,
+            risorse: risorse,
             dropdownItems: buildDropdownNames(), // <-- dinamico
           ),
           RapportinoSection(
@@ -1255,6 +1281,7 @@ String formatToHHMM(String input) {
 
   return '$hh:$mm';
 }
+
 String dataCorrenteSqlFormat(String ore) {
   final now = DateTime.now();
 
@@ -1281,6 +1308,7 @@ class _RapportinoSectionState extends State<RapportinoSection> {
     descrizioneController.dispose();
     super.dispose();
   }
+
   @override
   void initState() {
     super.initState();
@@ -1328,7 +1356,6 @@ class _RapportinoSectionState extends State<RapportinoSection> {
                   ),
                 ),
                 const SizedBox(width: 10),
-
               ],
             ),
           ),
@@ -1341,16 +1368,14 @@ class _RapportinoSectionState extends State<RapportinoSection> {
                 SizedBox(
                     width: 60,
                     child: TextField(
-                    controller: oreController,
-                    decoration: InputDecoration(labelText: "ORE"),
-                    keyboardType: TextInputType.number
-                )),
+                        controller: oreController,
+                        decoration: InputDecoration(labelText: "ORE"),
+                        keyboardType: TextInputType.number)),
                 SizedBox(width: 10),
                 Expanded(
                     child: TextField(
                         controller: descrizioneController,
-                        decoration: InputDecoration(labelText: "DESCRIZIONE")
-                    )),
+                        decoration: InputDecoration(labelText: "DESCRIZIONE"))),
                 SizedBox(width: 10),
                 Icon(Icons.add),
               ],
@@ -1378,47 +1403,53 @@ class _RapportinoSectionState extends State<RapportinoSection> {
             padding: const EdgeInsets.all(12.0),
             child: Center(
               child: TextButton.icon(
-                onPressed: () async{
+                onPressed: () async {
                   List<Tipologia> tp = await Tipologia.caricaTipoligie();
 
-
                   Tipologia? tipSelezionata = tp.firstWhere(
-                        (t) => t.getNomeTipologia() == widget.title,
-
+                    (t) => t.getNomeTipologia() == widget.title,
                   );
 
                   RisorseUmane? user = widget.risorse.firstWhere(
-                        (t) => "${t.getNome()} ${t.getCognome()}" == selectedValue,
-
+                    (t) => "${t.getNome()} ${t.getCognome()}" == selectedValue,
                   );
                   print("idUtente: ${user.getIdUtente()}");
 
-                  if (tipSelezionata != null && user.getIdUtente()!=null) {
-                    int idTipologia=tipSelezionata.getIdTipologia();
-                    String utente = selectedValue ?? "Nessun utente selezionato";
+                  if (tipSelezionata != null && user.getIdUtente() != null) {
+                    int idTipologia = tipSelezionata.getIdTipologia();
+                    String utente =
+                        selectedValue ?? "Nessun utente selezionato";
                     String ore = formatToHHMM(oreController.text.trim());
                     String descrizione = descrizioneController.text.trim();
-                    print("IdTipologia: ${idTipologia}ore: $ore descizione: $descrizione utente: $utente");
-                    print('Tipologia selezionata: ID = ${tipSelezionata.getIdTipologia()}, Nome = ${tipSelezionata.getNomeTipologia()}');
-                    int idCantiere=int.parse(await Storage.leggi("IdCantiereSelected"));
+                    print(
+                        "IdTipologia: ${idTipologia}ore: $ore descizione: $descrizione utente: $utente");
+                    print(
+                        'Tipologia selezionata: ID = ${tipSelezionata.getIdTipologia()}, Nome = ${tipSelezionata.getNomeTipologia()}');
+                    int idCantiere =
+                        int.parse(await Storage.leggi("IdCantiereSelected"));
 
-                    RisorseUmane.inserimentoCantiere(idCantiere,idTipologia.toString(),user.getIdUtente().toString(),idCantiere.toString(),dataCorrenteSqlFormat(ore),dataCorrenteSqlFormat(ore),dataCorrenteSqlFormat(ore),descrizione,0);
-
+                    RisorseUmane.inserimentoCantiere(
+                        idCantiere,
+                        idTipologia.toString(),
+                        user.getIdUtente().toString(),
+                        idCantiere.toString(),
+                        dataCorrenteSqlFormat(ore),
+                        dataCorrenteSqlFormat(ore),
+                        dataCorrenteSqlFormat(ore),
+                        descrizione,
+                        0);
                   } else {
                     print('⚠️ Nessuna tipologia trovata per "${widget.title}"');
                   }
 
                   print(widget.title);
-                  if(widget.title=='Attiv.A'){
+                  if (widget.title == 'Attiv.A') {
                     print("sono in attiva");
-                  }
-                  else if(widget.title=='Manodopera'){
+                  } else if (widget.title == 'Manodopera') {
                     print("sono in mano");
-                  }
-                  else if(widget.title=='Aziende'){
+                  } else if (widget.title == 'Aziende') {
                     print("sono in aziende");
-                  }
-                  else{
+                  } else {
                     print("sono in noleggio");
                   }
                 }, // Aggiungi funzionalità se serve
