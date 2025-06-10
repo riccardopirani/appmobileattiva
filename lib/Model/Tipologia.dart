@@ -20,10 +20,10 @@ class Tipologia {
   }
 
   String getNomeTipologia() {
-    return this.nomeTipologia;
+    return nomeTipologia;
   }
 
   int getIdTipologia() {
-    return this._idTipologia;
+    return _idTipologia;
   }
 }

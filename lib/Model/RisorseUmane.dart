@@ -32,35 +32,35 @@ class RisorseUmane {
       RisorseUmaneController.carica();
 
   int getIdUtente() {
-    return this._idUtente!;
+    return _idUtente!;
   }
 
   int getidRisorseUmaneRapportoMobile() {
-    return this._idRisorseUmaneRapportoMobile!;
+    return _idRisorseUmaneRapportoMobile!;
   }
 
   int getidRisorsaUmanaCantiere() {
-    return this._idRisorsaUmanaCantiere!;
+    return _idRisorsaUmanaCantiere!;
   }
 
   String getNome() {
-    return this.nome!;
+    return nome!;
   }
 
   String getCognome() {
-    return this.cognome!;
+    return cognome!;
   }
 
   String getData() {
-    return this.data!;
+    return data!;
   }
 
   String getTotaleOre() {
-    return this.totaleore!;
+    return totaleore!;
   }
 
   String getDescrizione() {
-    return this.descrizione!;
+    return descrizione!;
   }
 
   static Future<bool> inserimentoCantiere(

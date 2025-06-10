@@ -46,35 +46,35 @@ class Noleggio {
   Rapporto? rptemp;
 
   String getTipoMezzo() {
-    return this._tipomezzo!;
+    return _tipomezzo!;
   }
 
   String getTrasporto() {
-    return this._trasporto!;
+    return _trasporto!;
   }
 
   String getMatricola() {
-    return this._matricola!;
+    return _matricola!;
   }
 
   String getCostoNoleggio() {
-    return this._costonoleggio!;
+    return _costonoleggio!;
   }
 
   String getDatainizio() {
-    return this.datainizio!;
+    return datainizio!;
   }
 
   String getDataFine() {
-    return this.datafine!;
+    return datafine!;
   }
 
   String getRicarico() {
-    return this.ricarico!;
+    return ricarico!;
   }
 
   int? getIdNoleggio() {
-    return this.idNoleggio;
+    return idNoleggio;
   }
 
   String get tipomezzo => _tipomezzo!;

@@ -18,19 +18,19 @@ class ResocontoMarcature {
       this.totOreGiornaliereCantieri);
 
   String gettotOreGiornaliereMarcatempo() {
-    return this.totOreGiornaliereMarcatempo;
+    return totOreGiornaliereMarcatempo;
   }
 
   String gettotOreMensiliMarcatempo() {
-    return this.totOreMensiliMarcatempo;
+    return totOreMensiliMarcatempo;
   }
 
   String gettotOreCantieriMensili() {
-    return this.totOreCantieri;
+    return totOreCantieri;
   }
 
   String gettotOreGiornaliere() {
-    return this.totOreGiornaliereCantieri;
+    return totOreGiornaliereCantieri;
   }
 
   static Future<ResocontoMarcature> getListaMarcatureOreCantieri(
@@ -49,7 +49,7 @@ class Marcatura {
 
   Marcatura(Utente u, double longitudine, double latitudine, DateTime data,
       MarcaturaType type) {
-    this.utente = u;
+    utente = u;
     this.longitudine = longitudine;
     this.latitudine = latitudine;
     this.data = data;
@@ -58,11 +58,11 @@ class Marcatura {
 
   Marcatura.perstoricomarcature(Utente u, String longitudine, String latitudine,
       String stato, String totaleORE, String s) {
-    this.utente = u;
-    this.latString = latitudine;
-    this.lonString = longitudine;
+    utente = u;
+    latString = latitudine;
+    lonString = longitudine;
     this.stato = stato;
-    this.totaleOre = totaleORE;
+    totaleOre = totaleORE;
   }
 
   Future<bool> insertmarcatura(MarcaturaType mc, String DataCreazione) async {
@@ -71,15 +71,15 @@ class Marcatura {
   }
 
   String getStato() {
-    return this.stato!;
+    return stato!;
   }
 
   MarcaturaType getType() {
-    return this.type!;
+    return type!;
   }
 
   String getTotaleOre() {
-    return this.totaleOre!;
+    return totaleOre!;
   }
 
   static Future<List<Marcatura>> getListaMarcature(

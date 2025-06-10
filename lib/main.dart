@@ -1,8 +1,13 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui; // Necessario per ui.Image, ui.Canvas, ui.PictureRecorder
 
 import 'package:appattiva/Model/RisorseUmane.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:signature/signature.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'Controller/RisorseUmane.dart';
@@ -854,7 +859,7 @@ class VerbaleScreen extends StatefulWidget {
 
 class _VerbaleScreenState extends State<VerbaleScreen> {
   List<Widget> punti = [buildPunto(1)];
-
+  final ScreenshotController screenshotController = ScreenshotController();
   static Widget buildPunto(int index) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -884,62 +889,102 @@ class _VerbaleScreenState extends State<VerbaleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('VERBALE DI CANTIERE')),
+
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            Image.asset("assets/uiweb.jpg"),
-            Row(children: [Expanded(child: TextField(decoration: InputDecoration(labelText: 'VERBALE N°'))), SizedBox(width: 16), Expanded(child: TextField(decoration: InputDecoration(labelText: 'Data')))]),
-            TextField(decoration: InputDecoration(labelText: 'Codice')),
-            TextField(decoration: InputDecoration(labelText: 'Indirizzo cantiere')),
-            TextField(decoration: InputDecoration(labelText: 'Tipo appalto')),
-            Divider(),
+            /// 🔽 Screenshot solo della parte che interessa
+            Screenshot(
+              controller: screenshotController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-            // Commitente e DL
-            Row(
-              children: [
-                Expanded(child: Column(children: [TextField(decoration: InputDecoration(labelText: 'Committente Nome')), TextField(decoration: InputDecoration(labelText: 'Committente Mail'))])),
-                SizedBox(width: 16),
-                Expanded(child: Column(children: [TextField(decoration: InputDecoration(labelText: 'D.L. Nome')), TextField(decoration: InputDecoration(labelText: 'D.L. Mail'))])),
-              ],
-            ),
+                  Image.asset("assets/uiweb.jpg"),
 
-            // Progettista e CSE
-            Row(
-              children: [
-                Expanded(child: Column(children: [TextField(decoration: InputDecoration(labelText: 'Progettista Nome')), TextField(decoration: InputDecoration(labelText: 'Progettista Mail'))])),
-                SizedBox(width: 16),
-                Expanded(child: Column(children: [TextField(decoration: InputDecoration(labelText: 'C.S.E. Nome')), TextField(decoration: InputDecoration(labelText: 'C.S.E. Mail'))])),
-              ],
-            ),
+                  Row(children: [
+                    Expanded(child: TextField(decoration: InputDecoration(labelText: 'VERBALE N°'))),
+                    SizedBox(width: 16),
+                    Expanded(child: TextField(decoration: InputDecoration(labelText: 'Data')))
+                  ]),
 
-            SizedBox(height: 16),
-            TextField(decoration: InputDecoration(labelText: 'Presenti in cantiere')),
+                  TextField(decoration: InputDecoration(labelText: 'Codice')),
+                  TextField(decoration: InputDecoration(labelText: 'Indirizzo cantiere')),
+                  TextField(decoration: InputDecoration(labelText: 'Tipo appalto')),
 
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.add),
-                label: Text('AGGIUNGI PRESENTE'),
+                  Divider(),
+
+                  Row(
+                    children: [
+                      Expanded(child: Column(children: [
+                        TextField(decoration: InputDecoration(labelText: 'Committente Nome')),
+                        TextField(decoration: InputDecoration(labelText: 'Committente Mail'))
+                      ])),
+                      SizedBox(width: 16),
+                      Expanded(child: Column(children: [
+                        TextField(decoration: InputDecoration(labelText: 'D.L. Nome')),
+                        TextField(decoration: InputDecoration(labelText: 'D.L. Mail'))
+                      ])),
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      Expanded(child: Column(children: [
+                        TextField(decoration: InputDecoration(labelText: 'Progettista Nome')),
+                        TextField(decoration: InputDecoration(labelText: 'Progettista Mail'))
+                      ])),
+                      SizedBox(width: 16),
+                      Expanded(child: Column(children: [
+                        TextField(decoration: InputDecoration(labelText: 'C.S.E. Nome')),
+                        TextField(decoration: InputDecoration(labelText: 'C.S.E. Mail'))
+                      ])),
+                    ],
+                  ),
+
+                  SizedBox(height: 16),
+                  TextField(decoration: InputDecoration(labelText: 'Presenti in cantiere')),
+
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () {},
+                      icon: Icon(Icons.add),
+                      label: Text('AGGIUNGI PRESENTE'),
+                    ),
+                  ),
+
+                  SizedBox(height: 16),
+                  ...punti,
+
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: aggiungiPunto,
+                      icon: Icon(Icons.add, color: Colors.green),
+                      label: Text('AGGIUNGI PUNTO', style: TextStyle(color: Colors.green)),
+                    ),
+                  ),
+
+                  SizedBox(height: 32),
+                ],
               ),
             ),
-            SizedBox(height: 16),
 
-            ...punti,
-
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                onPressed: aggiungiPunto,
-                icon: Icon(Icons.add, color: Colors.green),
-                label: Text('AGGIUNGI PUNTO', style: TextStyle(color: Colors.green)),
-              ),
-            ),
-
-            SizedBox(height: 32),
+            /// 🔽 Pulsante FIRMA fuori dallo Screenshot
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                final image = await screenshotController.capture();
+                if (image != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignatureScreen(backgroundImage: image),
+                    ),
+                  );
+                }
+              },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               child: Text('FIRMA'),
             ),
@@ -948,6 +993,7 @@ class _VerbaleScreenState extends State<VerbaleScreen> {
       ),
     );
   }
+
 }
 class ArchiveButton extends StatelessWidget {
   final IconData icon;
@@ -971,6 +1017,74 @@ class ArchiveButton extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class SignatureScreen extends StatefulWidget {
+  final Uint8List backgroundImage;
+
+  SignatureScreen({required this.backgroundImage});
+
+  @override
+  _SignatureScreenState createState() => _SignatureScreenState();
+}
+
+class _SignatureScreenState extends State<SignatureScreen> {
+  final SignatureController _controller = SignatureController(penStrokeWidth: 3, penColor: Colors.black);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Firma sull'immagine")),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.memory(
+              widget.backgroundImage,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Signature(
+            controller: _controller,
+            backgroundColor: Colors.transparent,
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final ui.Image? signatureImage = await _controller.toImage();
+          if (signatureImage != null) {
+            final Uint8List merged = await mergeImages(widget.backgroundImage, signatureImage);
+            final directory = await getApplicationDocumentsDirectory();
+            final path = '${directory.path}/firma_salvata.png';
+            final file = File(path);
+            await file.writeAsBytes(merged);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Firma salvata in: $path')));
+            Navigator.pop(context);
+          }
+        },
+        child: Icon(Icons.save),
+      ),
+    );
+  }
+
+  Future<Uint8List> mergeImages(Uint8List bgBytes, ui.Image signatureImage) async {
+    final ui.Image bgImage = await decodeImageFromList(bgBytes);
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+
+    // Disegna background
+    canvas.drawImage(bgImage, Offset.zero, Paint());
+
+    // Disegna firma
+    canvas.drawImage(signatureImage, Offset.zero, Paint());
+
+    // Converti a immagine
+    final picture = recorder.endRecording();
+    final ui.Image finalImage = await picture.toImage(bgImage.width, bgImage.height);
+    final ByteData? byteData = await finalImage.toByteData(format: ui.ImageByteFormat.png);
+    return byteData!.buffer.asUint8List();
   }
 }
 
@@ -1274,17 +1388,17 @@ class _RapportinoSectionState extends State<RapportinoSection> {
                   );
 
                   RisorseUmane? user = widget.risorse.firstWhere(
-                        (t) => t.getNome()+" "+t.getCognome() == selectedValue,
+                        (t) => "${t.getNome()} ${t.getCognome()}" == selectedValue,
 
                   );
-                  print("idUtente: "+user.getIdUtente().toString());
+                  print("idUtente: ${user.getIdUtente()}");
 
                   if (tipSelezionata != null && user.getIdUtente()!=null) {
                     int idTipologia=tipSelezionata.getIdTipologia();
                     String utente = selectedValue ?? "Nessun utente selezionato";
                     String ore = formatToHHMM(oreController.text.trim());
                     String descrizione = descrizioneController.text.trim();
-                    print("IdTipologia: "+idTipologia.toString()+"ore: "+ore+" descizione: "+descrizione+" utente: "+utente);
+                    print("IdTipologia: ${idTipologia}ore: $ore descizione: $descrizione utente: $utente");
                     print('Tipologia selezionata: ID = ${tipSelezionata.getIdTipologia()}, Nome = ${tipSelezionata.getNomeTipologia()}');
                     int idCantiere=int.parse(await Storage.leggi("IdCantiereSelected"));
 

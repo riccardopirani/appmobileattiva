@@ -11,7 +11,7 @@ class Rapporto {
   Rapporto.empty();
 
   Rapporto(Utente u, Cantiere c) {
-    this.utente = u;
+    utente = u;
     this.c = c;
   }
 
@@ -24,14 +24,14 @@ class Rapporto {
       String noteTecnico,
       String noteCliente,
       String Citta) {
-    this.idRapportino = idRapporto;
+    idRapportino = idRapporto;
     this.idRapportoMobile = idRapportoMobile;
     this.utente = utente;
-    this.data = dataInserimento;
-    this.c = ctemp;
+    data = dataInserimento;
+    c = ctemp;
     this.noteCliente = noteCliente;
     this.noteTecnico = noteTecnico;
-    this.citta = Citta;
+    citta = Citta;
   }
 
   Cantiere? c;
@@ -40,19 +40,19 @@ class Rapporto {
   Utente? utente;
   static Uint8List? logo, firmatecnico;
 
-  String getNoteTecnico() => this.noteTecnico!;
+  String getNoteTecnico() => noteTecnico!;
 
-  String getNoteCliente() => this.noteCliente!;
+  String getNoteCliente() => noteCliente!;
 
-  int getIdRapporto() => this.idRapportoMobile!;
+  int getIdRapporto() => idRapportoMobile!;
 
-  int getIdRapportoUtente() => this.idRapportino!;
+  int getIdRapportoUtente() => idRapportino!;
 
-  Utente getUtente() => this.utente!;
+  Utente getUtente() => utente!;
 
-  Cantiere getCantiere() => this.c!;
+  Cantiere getCantiere() => c!;
 
-  String getData() => this.data!;
+  String getData() => data!;
 
   static Future<List<Rapporto>> genera(
       Utente utente, Cantiere c, String data) async {

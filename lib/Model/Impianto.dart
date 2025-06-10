@@ -36,31 +36,31 @@ class Impianto {
   }
 
   String getIndirizzo() {
-    return this.Indirizzo!;
+    return Indirizzo!;
   }
 
   String getCitta() {
-    return this.Citta!;
+    return Citta!;
   }
 
   String getFiliale() {
-    return this.Filiale!;
+    return Filiale!;
   }
 
   int GetIdCliente() {
-    return this.IdCliente!;
+    return IdCliente!;
   }
 
   String getRagioneSociale() {
-    return this.RagioneSociale!;
+    return RagioneSociale!;
   }
 
   int getIdImpianto() {
-    return this.idImpianto!;
+    return idImpianto!;
   }
 
   int getIdFiliale() {
-    return this.IdFiliale!;
+    return IdFiliale!;
   }
 
   Future<bool> delete() async {

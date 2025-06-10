@@ -99,12 +99,7 @@ class Verifica {
 
 class Log {
   static Future<void> error(String err) async {
-    try {
-      final Map<String, String> map = {'Messaggio': err};
-      //await apiRequest("/utente/notifica/errore", map, UrlRequest.POST);
-    } catch (err) {
-      log("Errore: " + err.toString());
-    }
+   print(err);
   }
 }
 

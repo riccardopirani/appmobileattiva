@@ -36,31 +36,31 @@ class SpeseSostenute {
       extraPreventivo;
 
   int getidSpeseSostenuteRapportoMobile() {
-    return this.idSpeseSostenuteRapportoMobile!;
+    return idSpeseSostenuteRapportoMobile!;
   }
 
   int getIdSpese() {
-    return this.idspese!;
+    return idspese!;
   }
 
   String getCausale() {
-    return this.causale!;
+    return causale!;
   }
 
   String getDescrizione() {
-    return this.descrizione!;
+    return descrizione!;
   }
 
   String getData() {
-    return this.data!;
+    return data!;
   }
 
   int getCosto() {
-    return this.costo!;
+    return costo!;
   }
 
   int getRicarico() {
-    return this.ricarico!;
+    return ricarico!;
   }
 
   static Future<bool> inseriscidentroRapportino(
