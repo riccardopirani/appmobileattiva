@@ -11,7 +11,7 @@ Future<String> apiRequest(
   UrlRequest type,
 ) async {
   try {
-    final server = "http://192.168.10.16:4501" + urlPassed;
+    final server = "http://192.168.1.37:4501" + urlPassed;
     print(server);
     final uri = Uri.parse(server);
     final httpClient = HttpClient();

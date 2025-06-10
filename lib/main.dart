@@ -9,8 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:signature/signature.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
+import 'package:appattiva/Controller/Attivita.dart';
 import 'Controller/RisorseUmane.dart';
 import 'Model/Cantiere.dart';
 import 'Model/Tipologia.dart';
@@ -144,7 +145,20 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final Uri emailLaunchUri = Uri(
+                      scheme: 'mailto',
+                      path: 'info@attivacostruzioni.com',
+                      query: Uri.encodeFull('subject=Recupero password&body=Salve, ho dimenticato la password del mio account.'),
+                    );
+
+                    if (await canLaunchUrl(emailLaunchUri)) {
+                      await launchUrl(emailLaunchUri);
+                    } else {
+                      // Optional: mostra un messaggio di errore all'utente
+                      print('Impossibile aprire il client email.');
+                    }
+                  },
                   child: const Text(
                     'Password dimenticata?',
                     style: TextStyle(color: Colors.green),
@@ -241,12 +255,19 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
   String? idCantiere;
   String? selectedIndirizzo;
   bool isButtonEnabled = false;
-
+  List<dynamic> attivitaSettimana = [];
   @override
   void initState() {
     super.initState();
-    caricaNome();
-    caricaCantieri();
+    caricaDati();
+  }
+
+
+  Future<void> caricaDati() async {
+    await Future.wait([
+      caricaNome(),
+      caricaCantieri(),
+    ]);
   }
 
   Future<void> caricaNome() async {
@@ -261,10 +282,35 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
   Future<void> caricaCantieri() async {
     final utente = Utente.init(0, "", "");
     final cantieri = await Cantiere.ricerca(utente, 0, '', '', true, 0);
+    final idUtenteCorrente = await Storage.leggi("IdUtente");
+
+    List<dynamic> tutteLeAttivita = await AttivitaController.caricaAttivita();
+    List<dynamic> attivitaUtente = tutteLeAttivita.where((attivita) {
+      return attivita["IdUtente"].toString() == idUtenteCorrente.toString();
+    }).toList();
+
+    // Associa il NomeCantiere a ciascuna attività utente
+    for (var attivita in attivitaUtente) {
+      int? idCantiereAttivita = attivita["IdCantiere"];
+      var cantiereAssociato = cantieri.firstWhere(
+            (c) => c.getIdCantiere() == idCantiereAttivita,
+
+      );
+
+      if (cantiereAssociato != null) {
+        attivita["Descrizione"] = cantiereAssociato.getNomeCantiere();
+      } else {
+        attivita["Descrizione"] = "Cantiere sconosciuto";
+      }
+    }
+
+    print("Attività utente con NomeCantiere:");
+    print(attivitaUtente);
 
     setState(() {
       cantieriList = cantieri;
       filteredCantieri = cantieri;
+      attivitaSettimana = attivitaUtente;
     });
   }
 
@@ -333,7 +379,13 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                           ],
                         ),
                         const Spacer(),
-                        const Icon(Icons.home, color: Colors.green, size: 32),
+                        IconButton(
+                          icon: const Icon(Icons.home, color: Colors.green, size: 32),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
                       ],
                     ),
                   ),
@@ -377,12 +429,24 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
                                     .toList(),
                               ),
                               TableRow(
-                                children: getWeekDates()
-                                    .map((d) => DayCell(
-                                          "Cod. 36${d.weekday}\nBunge",
-                                          isRed: d.weekday >= 6,
-                                        ))
-                                    .toList(),
+                                children: getWeekDates().map((d) {
+                                  final attivitaDelGiorno = attivitaSettimana.where((a) {
+                                    final data = DateTime.tryParse(a['DataInizio'] ?? '');
+                                    return data != null &&
+                                        data.year == d.year &&
+                                        data.month == d.month &&
+                                        data.day == d.day;
+                                  }).toList();
+
+                                  final descrizione = attivitaDelGiorno.isNotEmpty
+                                      ? (attivitaDelGiorno.first['Descrizione'] ?? 'Attività')
+                                      : '';
+
+                                  return DayCell(
+                                    descrizione.isNotEmpty ? "Cod. "+descrizione : 'Nessuna attività',
+                                    isRed: d.weekday >= 6,
+                                  );
+                                }).toList(),
                               ),
                             ],
                           ),
@@ -653,12 +717,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
   void initState() {
     super.initState();
     loadAddressData();
-    // Initialize WebView when the widget is first loaded
-    _webViewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(
-          Uri.parse('https://www.google.com/maps?q=$latitude,$longitude'));
-    print('Latitudine: $latitude, Longitudine: $longitude');
+
   }
 
   Future<void> loadAddressData() async {
@@ -667,7 +726,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
     final cliente = await Storage.leggi("selectedCliente");
     final userNome = await Storage.leggi("Nome");
     final userCognome = await Storage.leggi("Cognome");
-    print('Latitudine: $latitude, Longitudine: $longitude');
+
     setState(() {
       selectedCod = cod ?? '';
       selectedIndirizzo = indirizzo ?? '';
@@ -676,13 +735,21 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
       cognome = userCognome ?? '';
       userFullName = '$nome $cognome';
       addressString = '$selectedCod $selectedCliente $selectedIndirizzo';
-    });
 
-    setState(() {
+      // Sovrascrivi lat/lng se necessario qui
       latitude = 37.42796133580664;
       longitude = -122.085749655962;
     });
+
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(
+        Uri.parse('https://www.google.com/maps?q=$latitude,$longitude'),
+      );
+
+    setState(() {}); // Triggera il rebuild con il controller pronto
   }
+
 
   // Function to pick an image using the camera
   Future<void> takePhoto() async {
@@ -786,7 +853,13 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                     ],
                   ),
                   const Spacer(),
-                  const Icon(Icons.home, color: Colors.green, size: 32),
+                  IconButton(
+                    icon: const Icon(Icons.home, color: Colors.green, size: 32),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+
                 ],
               ),
             ),
@@ -804,11 +877,11 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: Container(
-                color: Colors.white,
-                child: WebViewWidget(controller: _webViewController),
-              ),
+              child: _webViewController != null
+                  ? WebViewWidget(controller: _webViewController)
+                  : const Center(child: CircularProgressIndicator()),
             ),
+
             const SizedBox(height: 30),
             Expanded(
               child: ListView(
