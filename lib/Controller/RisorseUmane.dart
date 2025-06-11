@@ -19,7 +19,8 @@ class RisorseUmaneController {
       String oreFine,
       String pausa,
       String descrizione,
-      int extraPreventivo,String ddt) async {
+      int extraPreventivo,
+      String ddt) async {
     Map<String, dynamic> map = {
       'IdTipologia': idtipologia,
       'Descrizione': descrizione,

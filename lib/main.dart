@@ -19,13 +19,13 @@ import 'Model/Cantiere.dart';
 import 'Model/Tipologia.dart';
 import 'Model/Utente.dart';
 import 'Utils/support.dart';
+import 'Verbale.dart';
 
 List<DateTime> getWeekDates() {
   final now = DateTime.now();
   final monday = now.subtract(Duration(days: now.weekday - 1));
   return List.generate(7, (i) => monday.add(Duration(days: i)));
 }
-
 
 String formatDate(DateTime date) {
   final giorni = ["lun.", "mar.", "mer.", "gio.", "ven.", "sab.", "dom."];
@@ -156,9 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           'subject=Recupero password&body=Salve, ho dimenticato la password del mio account.'),
                     );
 
-
-                      await launchUrl(emailLaunchUri);
-
+                    await launchUrl(emailLaunchUri);
                   },
                   child: const Text(
                     'Password dimenticata?',
@@ -911,8 +909,25 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   SizedBox(height: 16),
                   ArchiveButton(icon: Icons.photo, label: "Galleria foto"),
                   SizedBox(height: 16),
-                  ArchiveButton(
-                      icon: Icons.description, label: "Archivio verbali"),
+                  GestureDetector(
+                    onTap: () async {
+                      final idCantiere =
+                          await Storage.leggi("IdCantiereSelected");
+                      if (idCantiere != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ArchivioVerbaliScreen(
+                                idCantiere: int.parse(idCantiere)),
+                          ),
+                        );
+                      }
+                    },
+                    child: ArchiveButton(
+                      icon: Icons.description,
+                      label: "Archivio verbali",
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -1157,10 +1172,11 @@ class _SignatureScreenState extends State<SignatureScreen> {
             await file.writeAsBytes(merged);
             final String base64Image = base64Encode(merged);
             int idCantiere =
-            int.parse(await Storage.leggi("IdCantiereSelected"));
+                int.parse(await Storage.leggi("IdCantiereSelected"));
             VerbaleController.inserisciVerbale(idCantiere, base64Image);
             Navigator.pop(context);
-            Navigator.pop(context); // chiude schermata precedente (es. VerbaleScreen)
+            Navigator.pop(
+                context); // chiude schermata precedente (es. VerbaleScreen)
           }
         },
         child: Icon(Icons.save),
@@ -1219,12 +1235,6 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
     });
   }
 
-  final List<String> dropdownOptions = [
-    'Operatore 1',
-    'Operatore 2',
-    'Operatore 3'
-  ];
-
   List<String> buildDropdownNames() {
     return risorse.map((risorsa) {
       return "${risorsa.getNome()} ${risorsa.getCognome()}";
@@ -1235,19 +1245,6 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: const SizedBox(),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.black),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(12),
         child: SizedBox(
@@ -1258,59 +1255,56 @@ class _RapportinoScreenState extends State<RapportinoScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
             ),
-            onPressed: () {},
-            child: const Text('SALVA',
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              'SALVA',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(5),
-        children: [
-          const Text("Rapportino del",
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          children: [
+            const Text(
+              "Rapportino del",
               style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green)),
-          const SizedBox(height: 2),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(color: Colors.grey.shade300, blurRadius: 3)
-              ],
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
             ),
-            child: const Text("Data del giorno preimpostata. Ma modificabile."),
-          ),
-          const SizedBox(height: 20),
-          RapportinoSection(
-            title: "Attiv.A",
-            color: Colors.green,
-            risorse: risorse,
-            dropdownItems: buildDropdownNames(), // <-- dinamico
-          ),
-          RapportinoSection(
-            title: "Manodopera",
-            color: Colors.orange,
-            risorse: risorse,
-            dropdownItems: buildDropdownNames(), // <-- dinamico
-          ),
-          RapportinoSection(
-            title: "Aziende",
-            color: Colors.blue,
-            risorse: risorse,
-            dropdownItems: buildDropdownNames(), // <-- dinamico
-          ),
-          RapportinoSection(
-            title: "Noleggio",
-            color: Colors.purple,
-            risorse: risorse,
-            dropdownItems: buildDropdownNames(), // <-- dinamico
-          ),
-        ],
+            const SizedBox(height: 16),
+            RapportinoSection(
+              title: "Attiv.A",
+              color: Colors.green,
+              risorse: risorse,
+              dropdownItems: buildDropdownNames(),
+            ),
+            RapportinoSection(
+              title: "Manodopera",
+              color: Colors.orange,
+              risorse: risorse,
+              dropdownItems: buildDropdownNames(),
+            ),
+            RapportinoSection(
+              title: "Aziende",
+              color: Colors.blue,
+              risorse: risorse,
+              dropdownItems: buildDropdownNames(),
+            ),
+            RapportinoSection(
+              title: "Noleggio",
+              color: Colors.purple,
+              risorse: risorse,
+              dropdownItems: buildDropdownNames(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1376,7 +1370,7 @@ class _RapportinoSectionState extends State<RapportinoSection> {
   String? selectedValue;
   final TextEditingController oreController = TextEditingController();
   final TextEditingController descrizioneController = TextEditingController();
-String base64="";
+  String base64 = "";
   @override
   void dispose() {
     oreController.dispose();
@@ -1397,13 +1391,11 @@ String base64="";
     if (image != null) {
       final bytes = await image.readAsBytes();
       final base64Image = base64Encode(bytes);
-      base64=base64Image;
-
+      base64 = base64Image;
     } else {
       print("Nessuna foto scattata.");
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -1481,7 +1473,9 @@ String base64="";
                   const Icon(Icons.photo_camera, color: Colors.black54),
                   const SizedBox(width: 8),
                   Text(
-                    widget.title == "Attiv.A" ? "Fotografa DDT" : "Fotografa documento",
+                    widget.title == "Attiv.A"
+                        ? "Fotografa DDT"
+                        : "Fotografa documento",
                     style: const TextStyle(color: Colors.black54),
                   ),
                 ],
@@ -1528,7 +1522,8 @@ String base64="";
                         dataCorrenteSqlFormat(ore),
                         dataCorrenteSqlFormat(ore),
                         descrizione,
-                        0,base64);
+                        0,
+                        base64);
                   } else {
                     print('⚠️ Nessuna tipologia trovata per "${widget.title}"');
                   }
