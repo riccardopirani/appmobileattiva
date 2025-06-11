@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'Controller/RisorseUmane.dart';
+import 'Controller/Verbale.dart';
 import 'Model/Cantiere.dart';
 import 'Model/Tipologia.dart';
 import 'Model/Utente.dart';
@@ -816,7 +817,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   ),
                 ),
               ),
-              TextButton.icon(
+              /*TextButton.icon(
                 onPressed: takePhoto, // Opens the camera
                 icon: const Icon(Icons.photo_camera, color: Colors.green),
                 label: const Text(
@@ -824,7 +825,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   style: TextStyle(
                       color: Colors.green, fontWeight: FontWeight.bold),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),
@@ -1154,9 +1155,12 @@ class _SignatureScreenState extends State<SignatureScreen> {
             final path = '${directory.path}/firma_salvata.png';
             final file = File(path);
             await file.writeAsBytes(merged);
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Firma salvata in: $path')));
+            final String base64Image = base64Encode(merged);
+            int idCantiere =
+            int.parse(await Storage.leggi("IdCantiereSelected"));
+            VerbaleController.inserisciVerbale(idCantiere, base64Image);
             Navigator.pop(context);
+            Navigator.pop(context); // chiude schermata precedente (es. VerbaleScreen)
           }
         },
         child: Icon(Icons.save),
