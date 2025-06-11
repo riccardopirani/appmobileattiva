@@ -978,8 +978,6 @@ class _GalleriaFotoScreenState extends State<GalleriaFotoScreen> {
   Future<void> caricaFoto() async {
     final tutti = await VerbaleController.caricaVerbali(widget.idCantiere);
     final soloFoto = tutti.where((v) => v["Tipo"] == "FOTO").toList();
-
-    print(soloFoto.length);
     setState(() {
       immaginiBase64 = soloFoto.map((v) => v["Documento"] as String).toList();
     });
