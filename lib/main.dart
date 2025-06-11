@@ -753,15 +753,20 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
     setState(() {}); // Triggera il rebuild con il controller pronto
   }
 
-  // Function to pick an image using the camera
   Future<void> takePhoto() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
     if (image != null) {
-      File photo = File(image.path);
-      // Handle the captured photo here (e.g., store or display)
-      print("Foto scattata: ${photo.path}");
+      final bytes = await image.readAsBytes();
+      final base64Image = base64Encode(bytes);
+
+      int idCantiere = int.parse(await Storage.leggi("IdCantiereSelected"));
+      await VerbaleController.inserisciVerbale(idCantiere, base64Image, "FOTO");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Foto salvata in archivio")),
+      );
     } else {
       print("Nessuna foto scattata.");
     }
@@ -907,7 +912,21 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  ArchiveButton(icon: Icons.photo, label: "Galleria foto"),
+                  GestureDetector(
+                    onTap: () async {
+                      final idCantiere = await Storage.leggi("IdCantiereSelected");
+                      if (idCantiere != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GalleriaFotoScreen(idCantiere: int.parse(idCantiere)),
+                          ),
+                        );
+                      }
+                    },
+                    child: ArchiveButton(icon: Icons.photo, label: "Galleria foto"),
+                  ),
+
                   SizedBox(height: 16),
                   GestureDetector(
                     onTap: () async {
@@ -932,6 +951,86 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class GalleriaFotoScreen extends StatefulWidget {
+  final int idCantiere;
+
+  const GalleriaFotoScreen({super.key, required this.idCantiere});
+
+  @override
+  State<GalleriaFotoScreen> createState() => _GalleriaFotoScreenState();
+}
+
+class _GalleriaFotoScreenState extends State<GalleriaFotoScreen> {
+  List<String> immaginiBase64 = [];
+
+  @override
+  void initState() {
+    super.initState();
+    caricaFoto();
+  }
+
+  Future<void> caricaFoto() async {
+    final tutti = await VerbaleController.caricaVerbali(widget.idCantiere);
+    final soloFoto = tutti.where((v) => v["Tipo"] == "FOTO").toList();
+
+    print(soloFoto.length);
+    setState(() {
+      immaginiBase64 = soloFoto.map((v) => v["Documento"] as String).toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Galleria Foto"), backgroundColor: Colors.green),
+      body: immaginiBase64.isEmpty
+          ? const Center(child: Text("Nessuna foto disponibile"))
+          : GridView.builder(
+        padding: const EdgeInsets.all(12),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10,
+        ),
+        itemCount: immaginiBase64.length,
+        itemBuilder: (context, index) {
+          final imgBytes = base64Decode(immaginiBase64[index]);
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VisualizzaFotoScreen(
+                    imageBytes: imgBytes,
+                  ),
+                ),
+              );
+            },
+            child: Image.memory(imgBytes, fit: BoxFit.cover),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class VisualizzaFotoScreen extends StatelessWidget {
+  final Uint8List imageBytes;
+
+  const VisualizzaFotoScreen({super.key, required this.imageBytes});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(backgroundColor: Colors.black),
+      body: InteractiveViewer(
+        child: Center(
+          child: Image.memory(imageBytes),
         ),
       ),
     );
@@ -1173,7 +1272,7 @@ class _SignatureScreenState extends State<SignatureScreen> {
             final String base64Image = base64Encode(merged);
             int idCantiere =
                 int.parse(await Storage.leggi("IdCantiereSelected"));
-            VerbaleController.inserisciVerbale(idCantiere, base64Image);
+            VerbaleController.inserisciVerbale(idCantiere, base64Image,"VERBALE");
             Navigator.pop(context);
             Navigator.pop(
                 context); // chiude schermata precedente (es. VerbaleScreen)

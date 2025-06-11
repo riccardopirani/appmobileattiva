@@ -27,7 +27,7 @@ class _ArchivioVerbaliScreenState extends State<ArchivioVerbaliScreen> {
     final List<dynamic> risultati =
         await VerbaleController.caricaVerbali(widget.idCantiere);
     setState(() {
-      verbali = risultati;
+      verbali = risultati.where((v) => v['Tipo'] == 'VERBALE').toList();
     });
   }
 
