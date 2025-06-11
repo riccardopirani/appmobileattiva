@@ -19,7 +19,7 @@ class RisorseUmaneController {
       String oreFine,
       String pausa,
       String descrizione,
-      int extraPreventivo) async {
+      int extraPreventivo,String ddt) async {
     Map<String, dynamic> map = {
       'IdTipologia': idtipologia,
       'Descrizione': descrizione,
@@ -30,7 +30,8 @@ class RisorseUmaneController {
       'OreInizio': oreInizio,
       'OreFine': oreFine,
       'Pausa': pausa,
-      'ExtraPreventivo': extraPreventivo.toString()
+      'ExtraPreventivo': extraPreventivo.toString(),
+      'DDT': ddt,
     };
 
     String value = await apiRequest(

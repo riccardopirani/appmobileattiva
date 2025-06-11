@@ -155,12 +155,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           'subject=Recupero password&body=Salve, ho dimenticato la password del mio account.'),
                     );
 
-                    if (await canLaunchUrl(emailLaunchUri)) {
+
                       await launchUrl(emailLaunchUri);
-                    } else {
-                      // Optional: mostra un messaggio di errore all'utente
-                      print('Impossibile aprire il client email.');
-                    }
+
                   },
                   child: const Text(
                     'Password dimenticata?',
@@ -1377,7 +1374,7 @@ class _RapportinoSectionState extends State<RapportinoSection> {
   String? selectedValue;
   final TextEditingController oreController = TextEditingController();
   final TextEditingController descrizioneController = TextEditingController();
-
+String base64="";
   @override
   void dispose() {
     oreController.dispose();
@@ -1398,7 +1395,7 @@ class _RapportinoSectionState extends State<RapportinoSection> {
     if (image != null) {
       final bytes = await image.readAsBytes();
       final base64Image = base64Encode(bytes);
-
+      base64=base64Image;
 
     } else {
       print("Nessuna foto scattata.");
@@ -1529,7 +1526,7 @@ class _RapportinoSectionState extends State<RapportinoSection> {
                         dataCorrenteSqlFormat(ore),
                         dataCorrenteSqlFormat(ore),
                         descrizione,
-                        0);
+                        0,base64);
                   } else {
                     print('⚠️ Nessuna tipologia trovata per "${widget.title}"');
                   }

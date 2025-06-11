@@ -72,7 +72,7 @@ class RisorseUmane {
       String oreFine,
       String pausa,
       String descrizione,
-      int extra) async {
+      int extra,String ddt) async {
     return await RisorseUmaneController.inserimentoCantiere(
         idCantiere,
         idtipologia,
@@ -82,7 +82,7 @@ class RisorseUmane {
         oreFine,
         pausa,
         descrizione,
-        extra);
+        extra,ddt);
   }
 
   static Future<bool> inserisci(
