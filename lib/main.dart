@@ -1400,11 +1400,6 @@ class _RapportinoSectionState extends State<RapportinoSection> {
       final base64Image = base64Encode(bytes);
 
 
-      if (response.statusCode == 200) {
-        print("✅ Foto inviata con successo");
-      } else {
-        print("❌ Errore nell'invio della foto");
-      }
     } else {
       print("Nessuna foto scattata.");
     }
