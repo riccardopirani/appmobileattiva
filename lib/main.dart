@@ -1065,8 +1065,6 @@ class _VerbaleScreenState extends State<VerbaleScreen> {
                 ],
               ),
             ),
-
-            /// 🔽 Pulsante FIRMA fuori dallo Screenshot
             ElevatedButton(
               onPressed: () async {
                 final image = await screenshotController.capture();
