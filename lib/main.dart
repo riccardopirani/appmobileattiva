@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -23,6 +24,7 @@ List<DateTime> getWeekDates() {
   final monday = now.subtract(Duration(days: now.weekday - 1));
   return List.generate(7, (i) => monday.add(Duration(days: i)));
 }
+
 
 String formatDate(DateTime date) {
   final giorni = ["lun.", "mar.", "mer.", "gio.", "ven.", "sab.", "dom."];
@@ -1389,6 +1391,26 @@ class _RapportinoSectionState extends State<RapportinoSection> {
     selectedValue = widget.initialValue;
   }
 
+  Future<void> _takePhotoAndSend() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image != null) {
+      final bytes = await image.readAsBytes();
+      final base64Image = base64Encode(bytes);
+
+
+      if (response.statusCode == 200) {
+        print("✅ Foto inviata con successo");
+      } else {
+        print("❌ Errore nell'invio della foto");
+      }
+    } else {
+      print("Nessuna foto scattata.");
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1456,19 +1478,20 @@ class _RapportinoSectionState extends State<RapportinoSection> {
             ),
           ),
 
-          // Fotografa
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            child: Row(
-              children: [
-                const Icon(Icons.photo_camera, color: Colors.black54),
-                const SizedBox(width: 8),
-                Text(
-                    widget.title == "Attiv.A"
-                        ? "Fotografa DDT"
-                        : "Fotografa documento",
-                    style: const TextStyle(color: Colors.black54)),
-              ],
+          GestureDetector(
+            onTap: _takePhotoAndSend,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: Row(
+                children: [
+                  const Icon(Icons.photo_camera, color: Colors.black54),
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.title == "Attiv.A" ? "Fotografa DDT" : "Fotografa documento",
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ],
+              ),
             ),
           ),
 
