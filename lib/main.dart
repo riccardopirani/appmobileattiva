@@ -817,7 +817,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   ),
                 ),
               ),
-              /*TextButton.icon(
+              TextButton.icon(
                 onPressed: takePhoto, // Opens the camera
                 icon: const Icon(Icons.photo_camera, color: Colors.green),
                 label: const Text(
@@ -825,7 +825,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   style: TextStyle(
                       color: Colors.green, fontWeight: FontWeight.bold),
                 ),
-              ),*/
+              ),
             ],
           ),
         ),
