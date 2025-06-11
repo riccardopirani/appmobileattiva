@@ -5,10 +5,10 @@ class Filiale {
   String _nomeFiliale;
 
   String getIdFiliale() {
-    return this._idFiliale.toString();
+    return _idFiliale.toString();
   }
 
   String getNomeFiliale() {
-    return this._nomeFiliale;
+    return _nomeFiliale;
   }
 }

@@ -12,7 +12,6 @@ class ClienteController {
 
   static Future<List<Cliente>> ricercaCliente(String ragioneSociale) async {
     if (_clientiCache.containsKey(ragioneSociale)) {
-      print("Returning cached Clienti data");
       return _clientiCache[ragioneSociale]!;
     }
 

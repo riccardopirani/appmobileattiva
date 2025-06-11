@@ -13,10 +13,10 @@ class Fornitore {
   }
 
   String getNomeFornitore() {
-    return this._nomeFornitore;
+    return _nomeFornitore;
   }
 
   int getidFornitore() {
-    return this._idFornitore;
+    return _idFornitore;
   }
 }

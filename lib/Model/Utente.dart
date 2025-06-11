@@ -22,7 +22,7 @@ class Utente {
   }
 
   Utente.setIdUtente(int idUtente) {
-    this.idutente = idUtente;
+    idutente = idUtente;
   }
 
   Utente.completo(
@@ -66,12 +66,12 @@ class Utente {
 
   static Future<int> registrazione(String email, String username, String pwd,
       String name, String surname) async {
-    return new UtenteController()
+    return UtenteController()
         .registrazione(email, username, pwd, name, surname);
   }
 
   int GetIdUtente() {
-    return this.idutente!;
+    return idutente!;
   }
 
   static Future<Uint8List> getFirma(int idutente) async {
@@ -79,27 +79,27 @@ class Utente {
   }
 
   String GetNome() {
-    return this.nome!;
+    return nome!;
   }
 
   String GetCognome() {
-    return this.cognome!;
+    return cognome!;
   }
 
   String getImageProfilo() {
-    return this.profiloImage!;
+    return profiloImage!;
   }
 
   String GetTelefono() {
-    return this.telefono!;
+    return telefono!;
   }
 
   String GetEmail() {
-    return this.email!;
+    return email!;
   }
 
   String GetPassword() {
-    return this.password!;
+    return password!;
   }
 
   Future<bool> logout() async {
@@ -117,7 +117,7 @@ class Utente {
     var email = await Storage.leggi("Email");
     var password = await Storage.leggi("Password");
     var idutente = int.parse(await Storage.leggi("IdUtente"));
-    return new Utente.init(idutente, email, password);
+    return Utente.init(idutente, email, password);
   }
 
   static Future<bool> aggiornaimmagineprofilo(String base64) async {

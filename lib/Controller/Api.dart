@@ -10,9 +10,13 @@ Future<String> apiRequest(
   Map<String, dynamic> jsonMap,
   UrlRequest type,
 ) async {
-  try {
-    final server = "http://192.168.10.16:4501$urlPassed";
-    final uri = Uri.parse(server);
+  final localServer = "http://192.168.10.16:4501$urlPassed";
+  final fallbackServer =
+      "http://attivacostruzioni.marconisoftware.com:4501$urlPassed"; // 🔁 Sostituisci con il tuo IP pubblico
+
+  Future<String> makeRequest(String url) async {
+    print(url);
+    final uri = Uri.parse(url);
     final httpClient = HttpClient();
     HttpClientRequest request;
 
@@ -30,9 +34,11 @@ Future<String> apiRequest(
         request = await httpClient.deleteUrl(uri);
         break;
     }
+
     print(jsonMap);
     request.headers.contentType = ContentType.json;
     request.add(utf8.encode(json.encode(jsonMap)));
+
     final response = await request.close();
 
     if (response.statusCode == HttpStatus.unauthorized) {
@@ -42,9 +48,19 @@ Future<String> apiRequest(
 
     final reply = await response.transform(utf8.decoder).join();
     return reply;
-  } catch (e, stackTrace) {
-    Log.error("Errore durante la richiesta API: $e\n$stackTrace");
-    return "error";
+  }
+
+  print("sono qui");
+  try {
+    return await makeRequest(localServer);
+  } catch (e1) {
+    print("IP locale non raggiungibile: $e1. Provo con l'IP pubblico...");
+    try {
+      return await makeRequest(fallbackServer);
+    } catch (e2, stackTrace) {
+      print("Errore con l'IP pubblico: $e2\n$stackTrace");
+      return "error";
+    }
   } finally {
     HttpClient().close();
   }

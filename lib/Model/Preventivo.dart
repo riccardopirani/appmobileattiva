@@ -8,18 +8,18 @@ class Preventivo {
   bool selected = false;
 
   int getIdPreventivo() {
-    return this.IdPreventivo;
+    return IdPreventivo;
   }
 
   int getIdCliente() {
-    return this.IdCliente;
+    return IdCliente;
   }
 
   String getRagioneSociale() {
-    return this.RagioneSociale;
+    return RagioneSociale;
   }
 
   String getRiferimentoInterno() {
-    return this.RiferimentoInterno;
+    return RiferimentoInterno;
   }
 }

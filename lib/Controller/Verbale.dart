@@ -13,7 +13,7 @@ class VerbaleController {
       'Tipo': tipo,
     };
 
-    final value = await apiRequest("/verbale", map, UrlRequest.POST);
+    await apiRequest("/verbale", map, UrlRequest.POST);
     return true;
   }
 

@@ -55,43 +55,43 @@ class Cantiere {
   }
 
   String? getExtra() {
-    return this.TotaleExtra;
+    return TotaleExtra;
   }
 
   String? getIndirizzo() {
-    return this._indirizzo;
+    return _indirizzo;
   }
 
   String? getCommessaCliente() {
-    return this.commessacliente;
+    return commessacliente;
   }
 
   String? getCosto() {
-    return this.TotaleCosto;
+    return TotaleCosto;
   }
 
   String? getStato() {
-    return this._stato;
+    return _stato;
   }
 
   int? GetIdFilialeCliente() {
-    return this.IdFilialeCliente;
+    return IdFilialeCliente;
   }
 
   String? getTotaleFatturazione() {
-    return this.TotaleFatturazione;
+    return TotaleFatturazione;
   }
 
   String? getNomeCantiere() {
-    return this._nomeCantiere;
+    return _nomeCantiere;
   }
 
   String getFiliale() {
-    return this._c!.getFiliale();
+    return _c!.getFiliale();
   }
 
   String getRagioneSociale() {
-    return this._c!.getRagioneSociale();
+    return _c!.getRagioneSociale();
   }
 
   String? getDataCreazione() {
@@ -103,11 +103,11 @@ class Cantiere {
   }
 
   String? getCommessa() {
-    return this._commessa;
+    return _commessa;
   }
 
   String? getDescrizione() {
-    return this._DescrizioneEstesa;
+    return _DescrizioneEstesa;
   }
 
   String getLinkStatoImmagine() {
@@ -123,11 +123,11 @@ class Cantiere {
   }
 
   Cliente? getCliente() {
-    return this._c;
+    return _c;
   }
 
   String? getTipologia() {
-    return this._Tipologia;
+    return _Tipologia;
   }
 
   String get commessa => _commessa!;

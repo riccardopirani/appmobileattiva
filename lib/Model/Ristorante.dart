@@ -52,23 +52,23 @@ class Ristorante {
       RistoranteController.carica(c);
 
   String getRagioneSociale() {
-    return this._ragioneSociale!;
+    return _ragioneSociale!;
   }
 
   String getDescrizione() {
-    return this._descrizioneEstesa!;
+    return _descrizioneEstesa!;
   }
 
   String getData() {
-    return this._data!;
+    return _data!;
   }
 
   String getCosto() {
-    return this._costo.toString();
+    return _costo.toString();
   }
 
   int getIdRistorante() {
-    return this._idRistorante!;
+    return _idRistorante!;
   }
 
   static Future<List<Ristorante>> caricadarapporto(Rapporto c) async {

@@ -73,7 +73,7 @@ class KilometroController {
             tipomezzo: jsonObject["TipoMezzo"] as String,
             targa: jsonObject["Targa"] as String,
             data: jsonObject["Data"] as String,
-            rapporto: new Rapporto.empty()))
+            rapporto: Rapporto.empty()))
         .toList();
   }
 
@@ -107,7 +107,7 @@ class KilometroController {
               tipomezzo: jsonObject["TipoMezzo"] as String,
               targa: jsonObject["Targa"] as String,
               data: jsonObject["Data"] as String,
-              rapporto: new Rapporto.empty(),
+              rapporto: Rapporto.empty(),
               idRapportoMobile: jsonObject["IdKilometri"] as int,
             ))
         .toList();

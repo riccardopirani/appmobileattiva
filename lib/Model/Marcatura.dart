@@ -66,7 +66,7 @@ class Marcatura {
   }
 
   Future<bool> insertmarcatura(MarcaturaType mc, String DataCreazione) async {
-    var marcatura = new MarcaturaController(utente!, longitudine!, latitudine!);
+    var marcatura = MarcaturaController(utente!, longitudine!, latitudine!);
     return await marcatura.insertmarcatura(mc, DataCreazione);
   }
 
@@ -84,7 +84,7 @@ class Marcatura {
 
   static Future<List<Marcatura>> getListaMarcature(
       Utente u, String data) async {
-    var marcatura = new MarcaturaController(u, 0, 0);
+    var marcatura = MarcaturaController(u, 0, 0);
     return await marcatura.getListaMarcature(data);
   }
 }
