@@ -4,7 +4,8 @@ import 'package:appattiva/Controller/Api.dart';
 
 class VerbaleController {
   /// 📥 CREA un nuovo verbale
-  static Future<bool> inserisciVerbale(int idCantiere, String base64,String tipo) async {
+  static Future<bool> inserisciVerbale(
+      int idCantiere, String base64, String tipo) async {
     print("sono in inseriemento verbale");
     final map = {
       'IdCantiere': idCantiere,

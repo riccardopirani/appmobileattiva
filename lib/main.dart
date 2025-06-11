@@ -914,19 +914,21 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   SizedBox(height: 16),
                   GestureDetector(
                     onTap: () async {
-                      final idCantiere = await Storage.leggi("IdCantiereSelected");
+                      final idCantiere =
+                          await Storage.leggi("IdCantiereSelected");
                       if (idCantiere != null) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => GalleriaFotoScreen(idCantiere: int.parse(idCantiere)),
+                            builder: (context) => GalleriaFotoScreen(
+                                idCantiere: int.parse(idCantiere)),
                           ),
                         );
                       }
                     },
-                    child: ArchiveButton(icon: Icons.photo, label: "Galleria foto"),
+                    child: ArchiveButton(
+                        icon: Icons.photo, label: "Galleria foto"),
                   ),
-
                   SizedBox(height: 16),
                   GestureDetector(
                     onTap: () async {
@@ -986,32 +988,35 @@ class _GalleriaFotoScreenState extends State<GalleriaFotoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Galleria Foto"), backgroundColor: Colors.green),
+      appBar: AppBar(
+          title: const Text("Galleria Foto"), backgroundColor: Colors.green),
       body: immaginiBase64.isEmpty
           ? const Center(child: Text("Nessuna foto disponibile"))
           : GridView.builder(
-        padding: const EdgeInsets.all(12),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10,
-        ),
-        itemCount: immaginiBase64.length,
-        itemBuilder: (context, index) {
-          final imgBytes = base64Decode(immaginiBase64[index]);
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => VisualizzaFotoScreen(
-                    imageBytes: imgBytes,
-                  ),
-                ),
-              );
-            },
-            child: Image.memory(imgBytes, fit: BoxFit.cover),
-          );
-        },
-      ),
+              padding: const EdgeInsets.all(12),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: immaginiBase64.length,
+              itemBuilder: (context, index) {
+                final imgBytes = base64Decode(immaginiBase64[index]);
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VisualizzaFotoScreen(
+                          imageBytes: imgBytes,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Image.memory(imgBytes, fit: BoxFit.cover),
+                );
+              },
+            ),
     );
   }
 }
@@ -1270,7 +1275,8 @@ class _SignatureScreenState extends State<SignatureScreen> {
             final String base64Image = base64Encode(merged);
             int idCantiere =
                 int.parse(await Storage.leggi("IdCantiereSelected"));
-            VerbaleController.inserisciVerbale(idCantiere, base64Image,"VERBALE");
+            VerbaleController.inserisciVerbale(
+                idCantiere, base64Image, "VERBALE");
             Navigator.pop(context);
             Navigator.pop(
                 context); // chiude schermata precedente (es. VerbaleScreen)
