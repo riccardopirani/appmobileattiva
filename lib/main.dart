@@ -77,10 +77,29 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _serverController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _caricaServerDaStorage();
+  }
+
+  Future<void> _caricaServerDaStorage() async {
+    String? serverSalvato = await Storage.leggi("server");
+    if (serverSalvato != null && serverSalvato.length > 2) {
+      _serverController.text = serverSalvato;
+    } else {
+      print("sono qui");
+      _serverController.text = "http://192.168.10.16";
+    }
+    print("sono qui" + _serverController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F3F3), // colore sfondo chiaro
+      backgroundColor: const Color(0xFFF3F3F3),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -94,6 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 40),
 
+              // E-mail
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -142,9 +162,33 @@ class _LoginScreenState extends State<LoginScreen> {
                   focusedBorder: _inputBorder(),
                 ),
               ),
+              const SizedBox(height: 20),
+
+              // Server
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Server',
+                  style: TextStyle(
+                    color: Colors.green[700],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _serverController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon: const Icon(Icons.cloud, color: Colors.green),
+                  border: _inputBorder(),
+                  enabledBorder: _inputBorder(),
+                  focusedBorder: _inputBorder(),
+                ),
+              ),
 
               const SizedBox(height: 10),
-
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -155,7 +199,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       query: Uri.encodeFull(
                           'subject=Recupero password&body=Salve, ho dimenticato la password del mio account.'),
                     );
-
                     await launchUrl(emailLaunchUri);
                   },
                   child: const Text(
@@ -164,9 +207,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
 
+              // Bottone ACCEDI
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -179,12 +222,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    String email = _emailController.text.trim();
+                    String email = _emailController.text;
                     String password = _passwordController.text;
+                    String server = _serverController.text;
 
-                    Utente u = new Utente.init(0, "", "");
-                    bool valid = (await u.login(email, password));
-                    if (valid == true) {
+                    // Salva server
+                    await Storage.salva("server", server);
+
+                    Utente u = Utente.init(0, "", "");
+                    bool valid = await u.login(email, password);
+                    if (valid) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -201,10 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const Text('E-mail o password non validi.'),
                             actions: [
                               TextButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(); // Chiude il dialog
-                                },
+                                onPressed: () => Navigator.of(context).pop(),
                                 child: const Text('OK'),
                               ),
                             ],
