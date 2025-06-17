@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:appattiva/Model/Rapporto.dart';
-import 'package:appattiva/Model/RisorseUmane.dart';
-import 'package:appattiva/Model/Tipologia.dart';
-import 'package:appattiva/utils/support.dart';
+import 'package:appattivaweb/Model/Rapporto.dart';
+import 'package:appattivaweb/Model/RisorseUmane.dart';
+import 'package:appattivaweb/Model/Tipologia.dart';
+import 'package:appattivaweb/utils/support.dart';
 import 'package:intl/intl.dart';
 
 import 'Api.dart';

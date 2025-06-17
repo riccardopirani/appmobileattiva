@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Documento.dart';
-import 'package:appattiva/Model/Impianto.dart';
+import 'package:appattivaweb/Controller/Documento.dart';
+import 'package:appattivaweb/Model/Impianto.dart';
 
 class Documento {
   Documento(this.IdDoc, this.Utente, this.imp, this.Testo);

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appattiva/Model/Fornitore.dart';
+import 'package:appattivaweb/Model/Fornitore.dart';
 
 import 'Api.dart';
 

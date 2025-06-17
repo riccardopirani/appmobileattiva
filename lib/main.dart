@@ -3,8 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:appattiva/Controller/Attivita.dart';
-import 'package:appattiva/Model/RisorseUmane.dart';
+import 'package:appattivaweb/Controller/Attivita.dart';
+import 'package:appattivaweb/Model/RisorseUmane.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:appattiva/Model/Cantiere.dart';
-import 'package:appattiva/Model/Noleggio.dart';
-import 'package:appattiva/Model/Rapporto.dart';
-import 'package:appattiva/utils/support.dart';
+import 'package:appattivaweb/Model/Cantiere.dart';
+import 'package:appattivaweb/Model/Noleggio.dart';
+import 'package:appattivaweb/Model/Rapporto.dart';
+import 'package:appattivaweb/utils/support.dart';
 
 import 'Api.dart';
 

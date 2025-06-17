@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:appattiva/Controller/Utente.dart';
-import 'package:appattiva/Utils/support.dart';
+import '../Controller/Utente.dart';
+import '../Utils/support.dart';
 
 class Utente {
   int? idutente, AccessoCantieri = 0, AccessoImpianti = 0;

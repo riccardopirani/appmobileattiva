@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appattiva/Controller/Api.dart';
+import 'package:appattivaweb/Controller/Api.dart';
 
 import '../Model/ArticoloMagazzino.dart';
 import '../Model/Magazzino.dart';

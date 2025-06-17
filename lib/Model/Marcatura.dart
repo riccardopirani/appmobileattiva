@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Marcatura.dart' show MarcaturaController;
-import 'package:appattiva/Model/Utente.dart' show Utente;
+import 'package:appattivaweb/Controller/Marcatura.dart' show MarcaturaController;
+import 'package:appattivaweb/Model/Utente.dart' show Utente;
 
 enum MarcaturaType { Ingresso, Uscita, Arrivo, Partenza }
 

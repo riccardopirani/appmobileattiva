@@ -1,4 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.viewsoftware.appattivaweb">
+
+<!-- ✅ Permesso per usare Internet -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- ✅ (Facoltativo) se vuoi usare Internet in reti non sicure HTTP -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
         android:usesCleartextTraffic="true"
         android:label="appattiva"

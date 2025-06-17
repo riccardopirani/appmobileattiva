@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Note.dart';
-import 'package:appattiva/Model/Impianto.dart';
+import 'package:appattivaweb/Controller/Note.dart';
+import 'package:appattivaweb/Model/Impianto.dart';
 
 class Note {
   Note(this.IdNoteimpianto, this.Testo, this.Data, this.Utente, this.imp);

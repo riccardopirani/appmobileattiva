@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Kilometro.dart';
-import 'package:appattiva/Model/Fornitore.dart';
-import 'package:appattiva/Model/Rapporto.dart';
+import 'package:appattivaweb/Controller/Kilometro.dart';
+import 'package:appattivaweb/Model/Fornitore.dart';
+import 'package:appattivaweb/Model/Rapporto.dart';
 
 class Kilometro {
   int idKilometro = 0;

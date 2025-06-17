@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:appattiva/Controller/Rapporto.dart';
-import 'package:appattiva/Model/Cantiere.dart';
-import 'package:appattiva/Model/Utente.dart' show Utente;
-import 'package:appattiva/utils/support.dart';
+import 'package:appattivaweb/Controller/Rapporto.dart';
+import 'package:appattivaweb/Model/Cantiere.dart';
+import 'package:appattivaweb/Model/Utente.dart' show Utente;
+import 'package:appattivaweb/utils/support.dart';
 import 'package:flutter/material.dart';
 
 class Rapporto {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appattiva/Model/Contratto.dart';
+import 'package:appattivaweb/Model/Contratto.dart';
 
 import 'Api.dart';
 

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Articolo.dart';
-import 'package:appattiva/Model/Cantiere.dart';
-import 'package:appattiva/Model/Rapporto.dart';
+import 'package:appattivaweb/Controller/Articolo.dart';
+import 'package:appattivaweb/Model/Cantiere.dart';
+import 'package:appattivaweb/Model/Rapporto.dart';
 
 class Articolo {
   Articolo(

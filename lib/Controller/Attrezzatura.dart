@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:appattiva/Model/Attrezzatura.dart';
-import 'package:appattiva/utils/support.dart';
+import 'package:appattivaweb/Model/Attrezzatura.dart';
+import 'package:appattivaweb/utils/support.dart';
 
 import 'Api.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:appattiva/Model/Cliente.dart';
-import 'package:appattiva/Model/Filiale.dart';
+import 'package:appattivaweb/Model/Cliente.dart';
+import 'package:appattivaweb/Model/Filiale.dart';
 import 'package:flutter/foundation.dart';
 
 import 'Api.dart';

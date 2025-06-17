@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Fornitore.dart';
+import 'package:appattivaweb/Controller/Fornitore.dart';
 
 class Fornitore {
   int _idFornitore;

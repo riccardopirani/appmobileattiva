@@ -1,5 +1,5 @@
-import 'package:appattiva/Model/Rapporto.dart';
-import 'package:appattiva/Model/Ristorante.dart';
+import 'package:appattivaweb/Model/Rapporto.dart';
+import 'package:appattivaweb/Model/Ristorante.dart';
 
 import 'Api.dart';
 

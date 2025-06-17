@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:appattiva/Model/Cantiere.dart' show Cantiere;
-import 'package:appattiva/Model/Cliente.dart';
-import 'package:appattiva/Model/Rapporto.dart';
-import 'package:appattiva/Model/Utente.dart';
-import 'package:appattiva/utils/support.dart';
+import 'package:appattivaweb/Model/Cantiere.dart' show Cantiere;
+import 'package:appattivaweb/Model/Cliente.dart';
+import 'package:appattivaweb/Model/Rapporto.dart';
+import 'package:appattivaweb/Model/Utente.dart';
+import 'package:appattivaweb/utils/support.dart';
 import 'package:flutter/foundation.dart';
 
 import 'Api.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/RisorseUmane.dart';
+import 'package:appattivaweb/Controller/RisorseUmane.dart';
 
 class Tipologia {
   int _idTipologia;

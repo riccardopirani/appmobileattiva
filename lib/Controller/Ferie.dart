@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:appattiva/Model/Ferie.dart';
+import 'package:appattivaweb/Model/Ferie.dart';
 
 import '../Utils/support.dart';
 import 'Api.dart';

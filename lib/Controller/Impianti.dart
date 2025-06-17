@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:appattiva/Controller/Api.dart';
-import 'package:appattiva/Model/Cantiere.dart';
-import 'package:appattiva/Model/Impianto.dart';
-import 'package:appattiva/utils/support.dart';
+import 'package:appattivaweb/Controller/Api.dart';
+import 'package:appattivaweb/Model/Cantiere.dart';
+import 'package:appattivaweb/Model/Impianto.dart';
+import 'package:appattivaweb/utils/support.dart';
 
 class ImpiantoController {
   static Future<List<Impianto>> ricerca(

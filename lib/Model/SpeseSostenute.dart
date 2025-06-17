@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/SpeseSostenute.dart';
-import 'package:appattiva/Model/Rapporto.dart';
+import 'package:appattivaweb/Controller/SpeseSostenute.dart';
+import 'package:appattivaweb/Model/Rapporto.dart';
 
 import 'Utente.dart';
 

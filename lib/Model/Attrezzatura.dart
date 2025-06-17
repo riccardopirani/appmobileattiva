@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Attrezzatura.dart';
+import 'package:appattivaweb/Controller/Attrezzatura.dart';
 
 class Attrezzatura {
   final int idAttrezzature;

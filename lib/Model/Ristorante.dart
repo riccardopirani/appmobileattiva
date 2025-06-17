@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Ristorante.dart';
-import 'package:appattiva/Controller/RistoranteRapporto.dart';
-import 'package:appattiva/Model/Rapporto.dart';
+import 'package:appattivaweb/Controller/Ristorante.dart';
+import 'package:appattivaweb/Controller/RistoranteRapporto.dart';
+import 'package:appattivaweb/Model/Rapporto.dart';
 
 import 'Cantiere.dart';
 import 'Utente.dart';

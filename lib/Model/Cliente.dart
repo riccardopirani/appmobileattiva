@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Cliente.dart';
-import 'package:appattiva/Model/Filiale.dart';
+import 'package:appattivaweb/Controller/Cliente.dart';
+import 'package:appattivaweb/Model/Filiale.dart';
 
 class Cliente {
   final int idCliente;

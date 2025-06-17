@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Noleggio.dart';
-import 'package:appattiva/Model/Rapporto.dart';
+import 'package:appattivaweb/Controller/Noleggio.dart';
+import 'package:appattivaweb/Model/Rapporto.dart';
 
 import 'Cantiere.dart';
 import 'Fornitore.dart';

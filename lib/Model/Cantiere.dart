@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:appattiva/Controller/Cantiere.dart';
-import 'package:appattiva/Model/Cliente.dart';
-import 'package:appattiva/Model/Filiale.dart';
-import 'package:appattiva/Model/Preventivo.dart';
+import 'package:appattivaweb/Controller/Cantiere.dart';
+import 'package:appattivaweb/Model/Cliente.dart';
+import 'package:appattivaweb/Model/Filiale.dart';
+import 'package:appattivaweb/Model/Preventivo.dart';
 
 import 'Utente.dart';
 
