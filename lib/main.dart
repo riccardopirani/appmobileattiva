@@ -87,13 +87,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _caricaServerDaStorage() async {
     String? serverSalvato = await Storage.leggi("server");
-    if (serverSalvato != null && serverSalvato.length > 2) {
+    if (serverSalvato.length > 2) {
       _serverController.text = serverSalvato;
     } else {
       print("sono qui");
       _serverController.text = "http://192.168.10.16";
     }
-    print("sono qui" + _serverController.text);
   }
 
   @override
@@ -338,12 +337,8 @@ class _WeeklyOverviewScreenState extends State<WeeklyOverviewScreen> {
         (c) => c.getIdCantiere() == idCantiereAttivita,
       );
 
-      if (cantiereAssociato != null) {
-        attivita["Descrizione"] = cantiereAssociato.getNomeCantiere();
-      } else {
-        attivita["Descrizione"] = "Cantiere sconosciuto";
-      }
-    }
+      attivita["Descrizione"] = cantiereAssociato.getNomeCantiere();
+        }
 
     print("Attività utente con NomeCantiere:");
     print(attivitaUtente);
@@ -940,16 +935,14 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                     onTap: () async {
                       final idCantiere =
                           await Storage.leggi("IdCantiereSelected");
-                      if (idCantiere != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ArchivioRapportiniScreen(
-                                idCantiere: int.parse(idCantiere)),
-                          ),
-                        );
-                      }
-                    },
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ArchivioRapportiniScreen(
+                              idCantiere: int.parse(idCantiere)),
+                        ),
+                      );
+                                        },
                     child: ArchiveButton(
                       icon: Icons.list_alt,
                       label: "Archivio rapportini",
@@ -960,16 +953,14 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                     onTap: () async {
                       final idCantiere =
                           await Storage.leggi("IdCantiereSelected");
-                      if (idCantiere != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => GalleriaFotoScreen(
-                                idCantiere: int.parse(idCantiere)),
-                          ),
-                        );
-                      }
-                    },
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GalleriaFotoScreen(
+                              idCantiere: int.parse(idCantiere)),
+                        ),
+                      );
+                                        },
                     child: ArchiveButton(
                         icon: Icons.photo, label: "Galleria foto"),
                   ),
@@ -978,16 +969,14 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                     onTap: () async {
                       final idCantiere =
                           await Storage.leggi("IdCantiereSelected");
-                      if (idCantiere != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ArchivioVerbaliScreen(
-                                idCantiere: int.parse(idCantiere)),
-                          ),
-                        );
-                      }
-                    },
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ArchivioVerbaliScreen(
+                              idCantiere: int.parse(idCantiere)),
+                        ),
+                      );
+                                        },
                     child: ArchiveButton(
                       icon: Icons.description,
                       label: "Archivio verbali",
@@ -1647,7 +1636,7 @@ class _RapportinoSectionState extends State<RapportinoSection> {
                   );
                   print("idUtente: ${user.getIdUtente()}");
 
-                  if (tipSelezionata != null && user.getIdUtente() != null) {
+                  if (user.getIdUtente() != null) {
                     int idTipologia = tipSelezionata.getIdTipologia();
                     String utente =
                         selectedValue ?? "Nessun utente selezionato";
